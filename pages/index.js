@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import Game from "./Game";
+import Game from "../public/Game";
 
 export default function Home() {
   const canvasRef = useRef();
