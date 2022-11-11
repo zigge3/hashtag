@@ -12,20 +12,26 @@ export default class Player {
 
     const [posX, posY] = this.position;
     const newPos = [posX + velX, posY + velY];
-    const objs = [...objects, ...world.objects];
-    console.log(objs);
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
       .reduce((acc, obj) => {
-        return (
-          acc +
+        if (
           this.checkCollision(
-            [...this.position, ...this.size],
+            [...newPos, ...this.size],
             [...obj.position, ...obj.size]
           )
-        );
-      }, false);
-    if (!collisionFound) this.position = newPos;
+        ) {
+          acc.push(obj);
+        }
+
+        return acc;
+      }, []);
+    console.log(collisionFound);
+
+    if (!collisionFound.length) {
+      this.position = newPos;
+    } else {
+    }
   };
 
   checkCollision = (posA, posB) => {
