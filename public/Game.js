@@ -2,6 +2,7 @@ import Camera from "./Camera";
 import InputHandler from "./InputHandler";
 import Player from "./Player";
 import World from "./World";
+import WorldObject from "./WorldObject";
 
 export default class Game {
   constructor(props) {
@@ -14,17 +15,17 @@ export default class Game {
 
     ctx.width = canvas.width;
     ctx.height = canvas.height;
-    this.world = new World({});
-
-    const player = new Player({
+    this.world = new World({
       tick: this.addTick,
     });
+
+    const player = new Player();
     this.player = player;
-    socket.emit("add-player", { position: player.position });
+    socket.emit("add-player", player.toData());
     socket.on("player-added", (id) => {
       player.id = id;
       setInterval(() => {
-        socket.emit("player-tick", player.position);
+        socket.emit("player-tick", player.toData());
       }, 100);
     });
     const camera = new Camera({
@@ -50,18 +51,32 @@ export default class Game {
   syncWorld = (players) => {
     const { objects } = this.world;
     console.log(objects);
-    console.log(players, this.player.id);
     players
       .filter((player) => player.id !== this.player.id)
       .forEach((player) => {
-        const obj = objects.find((o) => o.id === player.id);
+        const obj = objects.find((o) => {
+          return o.id === player.id;
+        });
         if (obj) {
-          obj.position = player.position;
+          const [x1, y1] = player.position;
+          const [x2, y2] = obj.position;
+          const diff = x2 - x1 + y2 - y1;
+          if (diff > 2 || obj.t > 15) {
+            obj.position = player.position;
+            obj.t = 0;
+          } else {
+            obj.t += 1;
+          }
+
+          obj.velocity = player.velocity;
         } else {
-          objects.push({
-            ...player,
-            size: [100, 100],
-          });
+          console.log("object added");
+          objects.push(
+            new WorldObject({
+              ...player,
+              size: [100, 100],
+            })
+          );
         }
       });
   };

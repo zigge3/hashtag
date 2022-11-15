@@ -2,12 +2,21 @@ import { Server } from "socket.io";
 import _ from "underscore";
 
 class Player {
-  constructor({ id, position }) {
+  constructor({ id, position, velocity, inputs }) {
     this.id = id;
     this.position = position;
+    this.velocity = velocity;
+    this.inputs = inputs;
   }
   id = null;
+  velocity = [];
   position = [];
+  inputs = {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+  };
 }
 
 const SocketHandler = (req, res) => {
@@ -19,13 +28,19 @@ const SocketHandler = (req, res) => {
     res.socket.server.io = io;
     let players = [];
     io.on("connection", (socket) => {
-      socket.on("add-player", (p) => {
+      socket.on("add-player", (data) => {
         console.log("player added");
-        const player = new Player({ position: p.position, id: _.uniqueId() });
+        console.log(data);
+        const player = new Player({
+          ...data,
+          id: _.uniqueId(),
+        });
         players.push(player);
         socket.emit("player-added", player.id);
         socket.on("player-tick", (data) => {
-          player.position = data;
+          Object.keys(data).forEach((key) => {
+            player[key] = data[key];
+          });
         });
         socket.on("disconnect", () => {
           players = players.filter((pl) => pl.id !== player.id);
@@ -33,9 +48,8 @@ const SocketHandler = (req, res) => {
       });
     });
     setInterval(() => {
-      console.log(players);
       io.emit("update", players);
-    }, 10);
+    }, 20);
   }
   res.end();
 };

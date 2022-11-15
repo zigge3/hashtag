@@ -1,7 +1,11 @@
 import _ from "underscore";
 
 export default class World {
-  constructor() {}
+  constructor({ tick }) {
+    tick((options) =>
+      this.objects.forEach((obj) => obj.update && obj.update(options))
+    );
+  }
   gravity = [0, 10];
   objects = [
     {

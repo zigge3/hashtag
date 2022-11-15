@@ -2,9 +2,7 @@ import InputHandler from "./InputHandler";
 import _ from "underscore";
 
 export default class Player {
-  constructor({ tick }) {
-    tick(this.update);
-  }
+  constructor() {}
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
@@ -49,6 +47,9 @@ export default class Player {
         this.setYVelocity(0);
         this.isGrounded = true;
       } else {
+        if (this.velocity[1] < 0.05) {
+          this.setYVelocity(0);
+        }
         this.isGrounded = false;
       }
     }
@@ -113,5 +114,10 @@ export default class Player {
 
   setYVelocity = (y) => {
     this.velocity = [this.velocity[0], y];
+  };
+
+  toData = () => {
+    const { velocity, position, inputHandler } = this;
+    return { velocity, position, inputs: inputHandler.inputs };
   };
 }
