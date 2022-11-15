@@ -1,17 +1,5 @@
-import { useEffect, useRef } from "react";
-import Game from "../public/Game";
+import Game from "../components/Game";
 
 export default function Home() {
-  const canvasRef = useRef();
-  useEffect(() => {
-    canvasRef.current.height = window.innerHeight;
-    canvasRef.current.width = window.innerWidth;
-    const game = new Game({ canvas: canvasRef.current });
-    return () => game.close;
-  });
-  return (
-    <div>
-      <canvas ref={canvasRef} />
-    </div>
-  );
+  return <Game />;
 }

@@ -1,12 +1,17 @@
 export default class Camera {
-  constructor({ ctx, tick }) {
+  constructor({ ctx, tick, target }) {
     this.ctx = ctx;
     tick(this.update);
     tick(this.render);
+    if (target) {
+      this.append(target);
+    }
   }
 
   position = [0, 0];
-  target = null;
+  target = {
+    position: [0, 0],
+  };
 
   render = ({ world }) => {
     const { objects } = world;

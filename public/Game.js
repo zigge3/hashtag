@@ -5,20 +5,28 @@ import World from "./World";
 
 export default class Game {
   constructor(props) {
-    const { canvas } = props;
+    const { canvas, socket } = props;
     this.inputHandler = new InputHandler();
     //Setup canvas
     const ctx = canvas.getContext("2d");
     this.ctx = ctx;
+    this.socket = socket;
+
     ctx.width = canvas.width;
     ctx.height = canvas.height;
-    this.world = new World({
-      tick: this.addTick,
-    });
+    this.world = new World({});
+
     const player = new Player({
       tick: this.addTick,
     });
-
+    this.player = player;
+    socket.emit("add-player", { position: player.position });
+    socket.on("player-added", (id) => {
+      player.id = id;
+      setInterval(() => {
+        socket.emit("player-tick", player.position);
+      }, 100);
+    });
     const camera = new Camera({
       ctx,
       tick: this.addTick,
@@ -26,7 +34,7 @@ export default class Game {
 
     camera.append(player);
     this.world.objects.push(player);
-
+    socket.on("update", this.syncWorld);
     //Start game loop
 
     this.update();
@@ -39,6 +47,25 @@ export default class Game {
 
   last = performance.now();
 
+  syncWorld = (players) => {
+    const { objects } = this.world;
+    console.log(objects);
+    console.log(players, this.player.id);
+    players
+      .filter((player) => player.id !== this.player.id)
+      .forEach((player) => {
+        const obj = objects.find((o) => o.id === player.id);
+        if (obj) {
+          obj.position = player.position;
+        } else {
+          objects.push({
+            ...player,
+            size: [100, 100],
+          });
+        }
+      });
+  };
+
   //Updates objects in game world
   tick = (options) => {
     this.listeners.forEach((func) => func(options));
@@ -48,26 +75,11 @@ export default class Game {
     this.listeners.push(func);
   };
 
-  //Draw objects in game world
-  drawObjects = () => {
-    this.objects.forEach((obj) => obj?.draw(this));
-  };
-
   drawInputs = () => {
     const { ctx } = this;
     ctx.fillStyle = "white";
     ctx.font = "20px serif";
     ctx.fillText(JSON.stringify(this.inputHandler.inputs), 100, 100);
-  };
-
-  drawWorld = () => {
-    const { ctx } = this;
-    this.world.objects.forEach((obj) => {
-      ctx.beginPath();
-      ctx.strokeStyle = "white";
-      ctx.rect(...obj.position, ...obj.size);
-      ctx.stroke();
-    });
   };
 
   //Game loop based on frame count
