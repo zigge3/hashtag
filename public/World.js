@@ -11,6 +11,22 @@ export default class World {
     },
     {
       id: _.uniqueId(),
+      position: [-20, 0],
+      size: [20, window.innerHeight],
+    },
+    {
+      id: _.uniqueId(),
+      position: [0, window.innerHeight - 100],
+      size: [window.innerWidth, 100],
+    },
+    {
+      id: _.uniqueId(),
+      position: [0, window.innerHeight - 100],
+      size: [window.innerWidth, 100],
+    },
+
+    {
+      id: _.uniqueId(),
       position: [500, 500],
       size: [50, 50],
     },

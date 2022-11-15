@@ -2,7 +2,9 @@ import InputHandler from "./InputHandler";
 import _ from "underscore";
 
 export default class Player {
-  constructor() {}
+  constructor({ tick }) {
+    tick(this.update);
+  }
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
@@ -12,7 +14,8 @@ export default class Player {
   hasVerticalMovement = false;
   inputHandler = new InputHandler();
 
-  update = ({ objects, world, delta }) => {
+  update = ({ world, delta }) => {
+    const { objects } = world;
     this.getInputs();
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
