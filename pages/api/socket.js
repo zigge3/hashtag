@@ -35,7 +35,7 @@ const SocketHandler = (req, res) => {
     setInterval(() => {
       console.log(players);
       io.emit("update", players);
-    }, 100);
+    }, 10);
   }
   res.end();
 };
