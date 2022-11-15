@@ -1,14 +1,23 @@
+import InputHandler from "./InputHandler";
+import _ from "underscore";
+
 export default class Player {
   constructor() {}
-  id = 1;
+  id = _.uniqueId();
+  drag = 0.05;
   position = [0, 0];
   size = [100, 100];
   velocity = [0, 0];
+  isGrounded = false;
+  hasVerticalMovement = false;
+  inputHandler = new InputHandler();
 
   update = ({ objects, world, delta }) => {
+    this.getInputs();
+    !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
-    this.velocity = [velX + gravX, Math.min(velY + gravY, 7)];
+    this.velocity = [velX, Math.min(velY + gravY, 7)];
     const [posX, posY] = this.position;
     const newPos = [posX + velX, posY + velY];
     const collisionFound = [...objects, ...world.objects]
@@ -33,9 +42,37 @@ export default class Player {
         [...this.position, ...this.size],
         [...collisionFound[0].position, ...collisionFound[0].size]
       );
-      if (Math.abs(y) < 7.1) {
-        this.velocity = [this.velocity[0], 0];
+      if (this.velocity[1] > 0 && Math.abs(y) < 7.1) {
+        this.setYVelocity(0);
+        this.isGrounded = true;
+      } else {
+        this.isGrounded = false;
       }
+    }
+  };
+
+  setDrag = () => {
+    const [x] = this.velocity;
+    if (x > 0) {
+      this.setXVelocity(Math.max(x - this.drag, 0));
+    } else if (x < 0) {
+      this.setXVelocity(Math.min(x + this.drag, 0));
+    }
+  };
+
+  getInputs = () => {
+    this.hasVerticalMovement = false;
+    const [x] = this.velocity;
+    if (this.inputHandler.inputs.right) {
+      this.setXVelocity(x + 0.1);
+      this.hasVerticalMovement = true;
+    }
+    if (this.inputHandler.inputs.left) {
+      this.setXVelocity(x - 0.1);
+      this.hasVerticalMovement = true;
+    }
+    if (this.inputHandler.inputs.up && this.isGrounded) {
+      this.setYVelocity(-7);
     }
   };
 
@@ -65,5 +102,13 @@ export default class Player {
       `x: ${this.velocity[0]} y: ${Math.round(this.velocity[1] * 100) / 100}`,
       ...this.position
     );
+  };
+
+  setXVelocity = (x) => {
+    this.velocity = [x, this.velocity[1]];
+  };
+
+  setYVelocity = (y) => {
+    this.velocity = [this.velocity[0], y];
   };
 }

@@ -1,10 +1,11 @@
+import InputHandler from "./InputHandler";
 import Player from "./Player";
 import World from "./World";
 
 export default class Game {
   constructor(props) {
     const { canvas } = props;
-
+    this.inputHandler = new InputHandler();
     //Setup canvas
     const ctx = canvas.getContext("2d");
     this.ctx = ctx;
@@ -33,6 +34,13 @@ export default class Game {
     this.objects.forEach((obj) => obj?.draw(this));
   };
 
+  drawInputs = () => {
+    const { ctx } = this;
+    ctx.fillStyle = "white";
+    ctx.font = "20px serif";
+    ctx.fillText(JSON.stringify(this.inputHandler.inputs), 100, 100);
+  };
+
   drawWorld = () => {
     const { ctx } = this;
     this.world.objects.forEach((obj) => {
@@ -58,6 +66,7 @@ export default class Game {
       this.tick();
       this.drawWorld();
       this.drawObjects();
+      this.drawInputs();
 
       requestAnimationFrame(this.update);
     }
