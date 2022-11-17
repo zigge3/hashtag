@@ -1,5 +1,7 @@
+import variables from "./variables";
+import gsap from "gsap";
 export default class WorldObject {
-  constructor({ texture, customDraw, position, size, velocity, id }) {
+  constructor({ texture, customDraw, position, size, velocity, id, isStatic }) {
     this.id = id;
     this.texture = texture;
     this.customDraw = customDraw;
@@ -7,10 +9,25 @@ export default class WorldObject {
     this.velocity = velocity;
     this.size = size;
     this.t = 0;
+    this.isStatic = false;
   }
   update = () => {
     const [velX, velY] = this.velocity;
+
     const [posX, posY] = this.position;
-    this.position = [posX + velX, posY + Math.round(velY)];
+    //this.position = [posX + velX, posY + Math.round(velY)];
+  };
+  sync = (player) => {
+    const pos = { x: this.position[0], y: this.position[1] };
+    console.log(variables.SYNC_INTERVAL);
+    gsap.to(pos, {
+      x: player.position[0],
+      y: player.position[1],
+      duration: variables.SYNC_INTERVAL / 1000,
+      onUpdate: () => {
+        const { x, y } = pos;
+        this.position = [x, y];
+      },
+    });
   };
 }

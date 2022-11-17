@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import _ from "underscore";
+import varaibles from "../../public/variables";
 
 class Player {
   constructor({ id, position, velocity, inputs }) {
@@ -49,7 +50,7 @@ const SocketHandler = (req, res) => {
     });
     setInterval(() => {
       io.emit("update", players);
-    }, 20);
+    }, varaibles.SYNC_INTERVAL);
   }
   res.end();
 };
