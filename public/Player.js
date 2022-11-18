@@ -1,12 +1,14 @@
 import InputHandler from "./InputHandler";
 import _ from "underscore";
 
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+const MAX_X = 5;
 export default class Player {
   constructor() {}
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
-  size = [100, 100];
+  size = [50, 100];
   velocity = [0, 0];
   isGrounded = false;
   hasVerticalMovement = false;
@@ -18,7 +20,7 @@ export default class Player {
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
-    this.velocity = [velX, Math.min(velY + gravY, 7)];
+    this.velocity = [clamp(velX, -MAX_X, MAX_X), Math.min(velY + gravY, 7)];
     const [posX, posY] = this.position;
     const newPos = [posX + velX, posY + velY];
     const collisionFound = [...objects, ...world.objects]
@@ -38,28 +40,56 @@ export default class Player {
 
     if (!collisionFound.length) {
       this.position = newPos;
+      this.isGrounded = false;
     } else {
-      const { x, y } = this.distance(
+      const distance = this.distance(
         [...this.position, ...this.size],
         [...collisionFound[0].position, ...collisionFound[0].size]
       );
-      if (this.velocity[1] > 0 && Math.abs(y) < 7.1) {
+      const newDistance = this.distance(
+        [...newPos, ...this.size],
+        [...collisionFound[0].position, ...collisionFound[0].size]
+      );
+
+      //Collision down
+      if (this.downwardsCollision(distance, newDistance)) {
+        this.setYPosition(this.position[1] - newDistance.y);
         this.setYVelocity(0);
         this.isGrounded = true;
-      } else {
-        if (this.velocity[1] < 0.05) {
-          this.setYVelocity(0);
-        }
+        //Collision Up
+      } else if (this.upwardsCollision(newDistance, collisionFound[0])) {
         this.isGrounded = false;
+        if (this.isLedged(newDistance, collisionFound[0])) {
+          this.setYVelocity(0);
+          this.isGrounded = true;
+        } else {
+          this.setYPosition(newPos[1]);
+          this.setXVelocity(0);
+          this.isGrounded = false;
+        }
+      } else {
       }
     }
+  };
+  downwardsCollision = (distance, newDistance) =>
+    distance.y <= 0 && newDistance.y > 0;
+  upwardsCollision = (newDistance, obj) =>
+    newDistance.y < obj.size[1] + this.size[1];
+  rightCollision = (x) => {
+    return x > this.size[0];
+  };
+  isLedged = (newDistance, obj) => {
+    return this.size[1] + obj.size[1] - newDistance.y < 5;
+  };
+  leftCollision = (x, obj) => {
+    return Math.abs(x) > obj.size[0];
   };
 
   setDrag = () => {
     const [x] = this.velocity;
-    if (x > 0) {
+    if (x >= 0) {
       this.setXVelocity(Math.max(x - this.drag, 0));
-    } else if (x < 0) {
+    } else {
       this.setXVelocity(Math.min(x + this.drag, 0));
     }
   };
@@ -114,6 +144,14 @@ export default class Player {
 
   setYVelocity = (y) => {
     this.velocity = [this.velocity[0], y];
+  };
+
+  setXPosition = (x) => {
+    this.position = [x, this.position[1]];
+  };
+
+  setYPosition = (y) => {
+    this.position = [this.position[0], y];
   };
 
   toData = () => {

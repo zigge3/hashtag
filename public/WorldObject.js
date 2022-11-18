@@ -11,15 +11,8 @@ export default class WorldObject {
     this.t = 0;
     this.isStatic = false;
   }
-  update = () => {
-    const [velX, velY] = this.velocity;
-
-    const [posX, posY] = this.position;
-    //this.position = [posX + velX, posY + Math.round(velY)];
-  };
   sync = (player) => {
     const pos = { x: this.position[0], y: this.position[1] };
-    console.log(variables.SYNC_INTERVAL);
     gsap.to(pos, {
       x: player.position[0],
       y: player.position[1],

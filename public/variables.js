@@ -1,3 +1,3 @@
 export default {
-  SYNC_INTERVAL: 100,
+  SYNC_INTERVAL: 80,
 };

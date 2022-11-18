@@ -22,8 +22,8 @@ export default class World {
     },
     {
       id: Math.random() * 100,
-      position: [0, window.innerHeight - 100],
-      size: [window.innerWidth, 100],
+      position: [window.innerWidth, 0],
+      size: [20, window.innerHeight],
       isStatic: true,
     },
     {
