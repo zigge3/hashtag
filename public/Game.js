@@ -63,7 +63,6 @@ export default class Game {
           objects.push(
             new WorldObject({
               ...player,
-              size: [100, 100],
             })
           );
         }

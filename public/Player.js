@@ -60,7 +60,7 @@ export default class Player {
           this.setXPosition(
             this.position[0] - distance.x - collisionFound[0].size[0]
           );
-        } else {
+        } else if (this.velocity[0] < 0) {
           this.setXPosition(this.position[0] - distance.x + this.size[0]);
         }
 
@@ -156,7 +156,7 @@ export default class Player {
   };
 
   toData = () => {
-    const { velocity, position, inputHandler } = this;
-    return { velocity, position, inputs: inputHandler.inputs };
+    const { velocity, position, inputHandler, size } = this;
+    return { velocity, position, inputs: inputHandler.inputs, size };
   };
 }

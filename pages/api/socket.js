@@ -3,10 +3,11 @@ import _ from "underscore";
 import varaibles from "../../public/variables";
 
 class Player {
-  constructor({ id, position, velocity, inputs }) {
+  constructor({ id, position, velocity, inputs, size }) {
     this.id = id;
     this.position = position;
     this.velocity = velocity;
+    this.size = size;
     this.inputs = inputs;
   }
   id = null;
