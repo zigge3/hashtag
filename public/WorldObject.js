@@ -8,7 +8,6 @@ export default class WorldObject {
     this.position = position;
     this.velocity = velocity;
     this.size = size;
-    this.t = 0;
     this.isStatic = false;
   }
   sync = (player) => {

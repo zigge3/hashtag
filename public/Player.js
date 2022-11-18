@@ -46,43 +46,44 @@ export default class Player {
         [...this.position, ...this.size],
         [...collisionFound[0].position, ...collisionFound[0].size]
       );
-      const newDistance = this.distance(
-        [...newPos, ...this.size],
-        [...collisionFound[0].position, ...collisionFound[0].size]
-      );
+      this.isGrounded = false;
+      //Check down
+      if (this.verticalCollision(collisionFound[0])) {
+        if (this.velocity[1] > 0) this.isGrounded = true;
 
-      //Collision down
-      if (this.downwardsCollision(distance, newDistance)) {
-        this.setYPosition(this.position[1] - newDistance.y);
         this.setYVelocity(0);
-        this.isGrounded = true;
-        //Collision Up
-      } else if (this.upwardsCollision(newDistance, collisionFound[0])) {
-        this.isGrounded = false;
-        if (this.isLedged(newDistance, collisionFound[0])) {
-          this.setYVelocity(0);
-          this.isGrounded = true;
-        } else {
-          this.setYPosition(newPos[1]);
-          this.setXVelocity(0);
-          this.isGrounded = false;
-        }
       } else {
+        this.setYPosition(newPos[1]);
+      }
+      if (this.horizontalCollision(collisionFound[0])) {
+        if (this.velocity[0] > 0) {
+          this.setXPosition(
+            this.position[0] - distance.x - collisionFound[0].size[0]
+          );
+        } else {
+          this.setXPosition(this.position[0] - distance.x + this.size[0]);
+        }
+
+        this.setXVelocity(0);
       }
     }
   };
-  downwardsCollision = (distance, newDistance) =>
-    distance.y <= 0 && newDistance.y > 0;
-  upwardsCollision = (newDistance, obj) =>
-    newDistance.y < obj.size[1] + this.size[1];
-  rightCollision = (x) => {
-    return x > this.size[0];
+  verticalCollision = (obj) => {
+    const [velX, velY] = this.velocity;
+    const [posX, posY] = this.position;
+    return this.checkCollision(
+      [posX, posY + velY, ...this.size],
+      [...obj.position, ...obj.size]
+    );
   };
-  isLedged = (newDistance, obj) => {
-    return this.size[1] + obj.size[1] - newDistance.y < 5;
-  };
-  leftCollision = (x, obj) => {
-    return Math.abs(x) > obj.size[0];
+
+  horizontalCollision = (obj) => {
+    const [velX, velY] = this.velocity;
+    const [posX, posY] = this.position;
+    return this.checkCollision(
+      [posX + velX, posY, ...this.size],
+      [...obj.position, ...obj.size]
+    );
   };
 
   setDrag = () => {
