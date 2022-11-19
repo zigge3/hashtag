@@ -27,6 +27,10 @@ export default class InputHandler {
     });
   }
 
+  consumeInput = (input) => {
+    this.inputs[input] = false;
+  };
+
   inputs = {
     up: false,
     left: false,

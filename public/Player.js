@@ -7,10 +7,9 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const MAX_X = 5;
 export default class Player {
   constructor() {
-    console.log(charList[this.currentChar % 1]);
-    this.texture = new Texture(
-      charList[this.currentChar % (charList.length - 1)]
-    );
+    console.log(this.currentChar);
+    console.log(charList[this.currentChar % charList.length]);
+    this.setCharacter();
   }
   id = _.uniqueId();
   drag = 0.05;
@@ -122,25 +121,36 @@ export default class Player {
   getInputs = () => {
     this.hasVerticalMovement = false;
     const [x] = this.velocity;
-    if (this.inputHandler.inputs.right) {
+    const { inputs } = this.inputHandler;
+    if (inputs.right) {
       this.setXVelocity(x + 0.1);
       this.hasVerticalMovement = true;
     }
-    if (this.inputHandler.inputs.left) {
+    if (inputs.left) {
       this.setXVelocity(x - 0.1);
       this.hasVerticalMovement = true;
     }
-    if (this.inputHandler.inputs.up && this.isGrounded) {
+    if (inputs.up && this.isGrounded) {
       this.setYVelocity(-7);
     }
     const [sx, sy] = this.size;
-    if (this.inputHandler.inputs.small) {
+    if (inputs.small) {
       this.size = [sx - 0.1, sy + 0.1];
       this.setYPosition(this.position[1] - 0.1);
     }
-    if (this.inputHandler.inputs.large) {
+    if (inputs.large) {
       this.size = [sx + 0.1, sy - 0.1];
     }
+
+    if (inputs.swap) {
+      this.currentChar++;
+      this.inputHandler.consumeInput("swap");
+      this.setCharacter();
+    }
+  };
+
+  setCharacter = () => {
+    this.texture = new Texture(charList[this.currentChar % charList.length]);
   };
 
   checkCollision = (posA, posB) => {
