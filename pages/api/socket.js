@@ -10,6 +10,7 @@ class Player {
   velocity = [];
   position = [];
   textureName = null;
+  size = [0, 0];
   inputs = {
     up: false,
     down: false,

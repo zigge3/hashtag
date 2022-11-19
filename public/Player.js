@@ -1,21 +1,31 @@
 import InputHandler from "./InputHandler";
 import _ from "underscore";
 import Texture from "./Texture";
-
+import variables from "./variables";
+const charList = ["kevin.png", "timmy.png"];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const MAX_X = 5;
 export default class Player {
-  constructor() {}
+  constructor() {
+    console.log(charList[this.currentChar % 1]);
+    this.texture = new Texture(
+      charList[this.currentChar % (charList.length - 1)]
+    );
+  }
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
   size = [100, 100];
   velocity = [0, 0];
   isGrounded = false;
+  isPlayer = true;
   hasVerticalMovement = false;
   inputHandler = new InputHandler();
+  layer = 0;
   image = null;
-  texture = new Texture("timmy.png");
+  drawType = variables.DRAW_TYPES.TEXTURE;
+  currentChar = 1;
+
   faceingRight = true;
 
   update = ({ world, delta }) => {
@@ -30,7 +40,7 @@ export default class Player {
     this.setFaceing();
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
-      .filter((a) => !a.isBackground)
+      .filter((a) => a.layer === this.layer)
       .reduce((acc, obj) => {
         if (
           this.checkCollision(
@@ -178,8 +188,15 @@ export default class Player {
   };
 
   toData = () => {
-    const { velocity, position, inputHandler, size, texture, faceingRight } =
-      this;
+    const {
+      velocity,
+      position,
+      inputHandler,
+      size,
+      texture,
+      faceingRight,
+      isPlayer,
+    } = this;
 
     return {
       faceingRight,
@@ -188,6 +205,7 @@ export default class Player {
       inputs: inputHandler.inputs,
       size,
       textureName: texture.name,
+      isPlayer,
     };
   };
 }
