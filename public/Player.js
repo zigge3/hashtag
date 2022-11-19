@@ -15,7 +15,7 @@ export default class Player {
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
-  size = [100, 100];
+  size = [50, 100];
   velocity = [0, 0];
   isGrounded = false;
   isPlayer = true;
