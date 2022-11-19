@@ -35,7 +35,7 @@ export default class Player {
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
     this.velocity = [clamp(velX, -MAX_X, MAX_X), Math.min(velY + gravY, 7)];
     const [posX, posY] = this.position;
-    const newPos = [posX + velX, posY + velY];
+    const newPos = [posX + velX * (delta / 4), posY + velY * (delta / 5)];
     this.setFaceing();
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
