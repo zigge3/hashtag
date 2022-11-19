@@ -20,17 +20,29 @@ export default class Camera {
     const cy = position[1] - window.innerHeight / 2;
     objects
       .sort((a, b) => a.isBackground < b.isBackground)
-      .forEach(({ size, position, texture, isBackground }) => {
+      .forEach(({ size, position, texture, isBackground, faceingRight }) => {
         const [px, py] = position;
         const [sx, sy] = size;
         if (isBackground) {
-          console.log("asdasd");
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
         } else if (texture && texture.ready) {
           const [x, y] = texture.size || size;
           const [ox, oy] = texture.offset;
-          ctx.drawImage(texture.texture, px - cx - ox, py - cy - oy, x, y);
+          ctx.save();
+          let flipped = 1;
+          if (!faceingRight) {
+            ctx.scale(-1, 1);
+            flipped = -1;
+          }
+          ctx.drawImage(
+            texture.texture,
+            flipped * (px - cx - ox) - (flipped === -1 ? x : 0),
+            py - cy - oy,
+            x,
+            y
+          );
+          ctx.restore();
         }
         ctx.globalAlpha = 1;
 

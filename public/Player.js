@@ -15,7 +15,8 @@ export default class Player {
   hasVerticalMovement = false;
   inputHandler = new InputHandler();
   image = null;
-  texture = new Texture("mario.png");
+  texture = new Texture("timmy.png");
+  faceingRight = true;
 
   update = ({ world, delta }) => {
     const { objects } = world;
@@ -26,6 +27,7 @@ export default class Player {
     this.velocity = [clamp(velX, -MAX_X, MAX_X), Math.min(velY + gravY, 7)];
     const [posX, posY] = this.position;
     const newPos = [posX + velX, posY + velY];
+    this.setFaceing();
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
       .filter((a) => !a.isBackground)
@@ -99,6 +101,14 @@ export default class Player {
     }
   };
 
+  setFaceing = () => {
+    if (this.velocity[0] > 0) {
+      this.faceingRight = true;
+    } else if (this.velocity[0] < 0) {
+      this.faceingRight = false;
+    }
+  };
+
   getInputs = () => {
     this.hasVerticalMovement = false;
     const [x] = this.velocity;
@@ -112,6 +122,14 @@ export default class Player {
     }
     if (this.inputHandler.inputs.up && this.isGrounded) {
       this.setYVelocity(-7);
+    }
+    const [sx, sy] = this.size;
+    if (this.inputHandler.inputs.small) {
+      this.size = [sx - 0.1, sy + 0.1];
+      this.setYPosition(this.position[1] - 0.1);
+    }
+    if (this.inputHandler.inputs.large) {
+      this.size = [sx + 0.1, sy - 0.1];
     }
   };
 
@@ -160,9 +178,11 @@ export default class Player {
   };
 
   toData = () => {
-    const { velocity, position, inputHandler, size, texture } = this;
+    const { velocity, position, inputHandler, size, texture, faceingRight } =
+      this;
 
     return {
+      faceingRight,
       velocity,
       position,
       inputs: inputHandler.inputs,

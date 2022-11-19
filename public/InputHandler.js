@@ -3,6 +3,9 @@ const KEYS = {
   left: "a",
   backwards: "s",
   right: "d",
+  large: "x",
+  small: "z",
+  swap: "c",
 };
 
 export default class InputHandler {
@@ -29,5 +32,8 @@ export default class InputHandler {
     left: false,
     backwards: false,
     right: false,
+    large: false,
+    small: false,
+    swap: false,
   };
 }
