@@ -51,7 +51,8 @@ export default class World {
     new WorldObject({
       id: Math.random() * 100,
       position: [500, 500],
-      size: [50, 50],
+      texture: new Texture("dick.png"),
+      size: [100, 100],
       isStatic: true,
     }),
   ];
