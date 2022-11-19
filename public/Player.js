@@ -1,5 +1,6 @@
 import InputHandler from "./InputHandler";
 import _ from "underscore";
+import Texture from "./Texture";
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const MAX_X = 5;
@@ -13,6 +14,8 @@ export default class Player {
   isGrounded = false;
   hasVerticalMovement = false;
   inputHandler = new InputHandler();
+  image = null;
+  texture = new Texture("mario.png");
 
   update = ({ world, delta }) => {
     const { objects } = world;
@@ -55,6 +58,7 @@ export default class Player {
       } else {
         this.setYPosition(newPos[1]);
       }
+
       if (this.horizontalCollision(collisionFound[0])) {
         if (this.velocity[0] > 0) {
           this.setXPosition(

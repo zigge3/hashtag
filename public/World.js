@@ -1,5 +1,5 @@
 import _ from "underscore";
-
+import Texture from "./Texture";
 export default class World {
   constructor({ tick }) {
     tick((options) =>
@@ -30,6 +30,10 @@ export default class World {
       id: Math.random() * 100,
       position: [0, window.innerHeight - 100],
       size: [window.innerWidth, 100],
+      texture: new Texture("grass.png", {
+        size: [window.innerWidth, 150],
+        offset: [0, 50],
+      }),
       isStatic: true,
     },
 

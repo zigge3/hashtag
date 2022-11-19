@@ -1,15 +1,18 @@
 import variables from "./variables";
 import gsap from "gsap";
+import _ from "underscore";
 export default class WorldObject {
-  constructor({ texture, customDraw, position, size, velocity, id, isStatic }) {
-    this.id = id;
-    this.texture = texture;
-    this.customDraw = customDraw;
-    this.position = position;
-    this.velocity = velocity;
-    this.size = size;
-    this.isStatic = false;
+  constructor(options) {
+    Object.assign(this, options);
   }
+  id = null;
+  texture = null;
+  customDraw = _.noop;
+  position = [0, 0];
+  velocity = [0, 0];
+  size = [0, 0];
+  zIndex = 0;
+  layer = 0;
   sync = (player) => {
     const pos = { x: this.position[0], y: this.position[1] };
     gsap.to(pos, {
