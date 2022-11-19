@@ -1,6 +1,7 @@
 export default class Texture {
   constructor(texture, options = {}) {
     Object.assign(this, options);
+    this.name = texture;
     const img = new Image();
     img.onload = () => {
       this.ready = true;

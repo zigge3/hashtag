@@ -3,16 +3,13 @@ import _ from "underscore";
 import varaibles from "../../public/variables";
 
 class Player {
-  constructor({ id, position, velocity, inputs, size }) {
-    this.id = id;
-    this.position = position;
-    this.velocity = velocity;
-    this.size = size;
-    this.inputs = inputs;
+  constructor(options) {
+    Object.assign(this, options);
   }
   id = null;
   velocity = [];
   position = [];
+  textureName = null;
   inputs = {
     up: false,
     down: false,
@@ -40,9 +37,7 @@ const SocketHandler = (req, res) => {
         players.push(player);
         socket.emit("player-added", player.id);
         socket.on("player-tick", (data) => {
-          Object.keys(data).forEach((key) => {
-            player[key] = data[key];
-          });
+          Object.assign(player, data);
         });
         socket.on("disconnect", () => {
           players = players.filter((pl) => pl.id !== player.id);

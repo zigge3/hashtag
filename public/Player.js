@@ -9,7 +9,7 @@ export default class Player {
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
-  size = [50, 100];
+  size = [100, 100];
   velocity = [0, 0];
   isGrounded = false;
   hasVerticalMovement = false;
@@ -160,7 +160,14 @@ export default class Player {
   };
 
   toData = () => {
-    const { velocity, position, inputHandler, size } = this;
-    return { velocity, position, inputs: inputHandler.inputs, size };
+    const { velocity, position, inputHandler, size, texture } = this;
+
+    return {
+      velocity,
+      position,
+      inputs: inputHandler.inputs,
+      size,
+      textureName: texture.name,
+    };
   };
 }

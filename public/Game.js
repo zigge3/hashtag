@@ -60,11 +60,7 @@ export default class Game {
         if (obj) {
           obj?.sync(player);
         } else {
-          objects.push(
-            new WorldObject({
-              ...player,
-            })
-          );
+          objects.push(new WorldObject(player));
         }
       });
     this.world.objects = objects.filter(

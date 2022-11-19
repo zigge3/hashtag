@@ -1,9 +1,13 @@
 import variables from "./variables";
 import gsap from "gsap";
 import _ from "underscore";
+import Texture from "./Texture";
 export default class WorldObject {
   constructor(options) {
     Object.assign(this, options);
+    if (options.textureName) {
+      this.texture = new Texture(options.textureName);
+    }
   }
   id = null;
   texture = null;
