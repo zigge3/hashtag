@@ -18,22 +18,27 @@ export default class Camera {
     const { ctx, position } = this;
     const cx = position[0] - window.innerWidth / 2;
     const cy = position[1] - window.innerHeight / 2;
-    objects.forEach(({ size, position, texture }) => {
-      const [px, py] = position;
-      const [sx, sy] = size;
-      if (texture && texture.ready) {
-        const [x, y] = texture.size || size;
-        const [ox, oy] = texture.offset;
-        ctx.globalCompositeOperation = "lighter";
-        ctx.drawImage(texture.texture, px - cx - ox, py - cy - oy, x, y);
-      }
-      ctx.globalAlpha = 1;
+    objects
+      .sort((a, b) => a.isBackground < b.isBackground)
+      .forEach(({ size, position, texture, isBackground }) => {
+        const [px, py] = position;
+        const [sx, sy] = size;
+        if (isBackground) {
+          console.log("asdasd");
+          ctx.fillStyle = "black";
+          ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+        } else if (texture && texture.ready) {
+          const [x, y] = texture.size || size;
+          const [ox, oy] = texture.offset;
+          ctx.drawImage(texture.texture, px - cx - ox, py - cy - oy, x, y);
+        }
+        ctx.globalAlpha = 1;
 
-      ctx.beginPath();
-      ctx.strokeStyle = "white";
-      ctx.rect(px - cx, py - cy, sx, sy);
-      ctx.stroke();
-    });
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.rect(px - cx, py - cy, sx, sy);
+        ctx.stroke();
+      });
   };
 
   append = (target) => {

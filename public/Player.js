@@ -28,6 +28,7 @@ export default class Player {
     const newPos = [posX + velX, posY + velY];
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
+      .filter((a) => !a.isBackground)
       .reduce((acc, obj) => {
         if (
           this.checkCollision(
@@ -53,7 +54,6 @@ export default class Player {
       //Check down
       if (this.verticalCollision(collisionFound[0])) {
         if (this.velocity[1] > 0) this.isGrounded = true;
-
         this.setYVelocity(0);
       } else {
         this.setYPosition(newPos[1]);

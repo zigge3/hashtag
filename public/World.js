@@ -10,6 +10,17 @@ export default class World {
   objects = [
     {
       id: Math.random() * 100,
+      position: [0, 0],
+      size: [window.innerWidth, window.innerHeight],
+      isBackground: true,
+      isStatic: true,
+      texture: new Texture("grass.png", {
+        size: [window.innerWidth, 150],
+        offset: [0, 0],
+      }),
+    },
+    {
+      id: Math.random() * 100,
       position: [0, window.innerHeight - 100],
       size: [window.innerWidth, 100],
       isStatic: true,
