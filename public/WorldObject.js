@@ -28,6 +28,9 @@ export default class WorldObject {
   layer = 0;
   isStatic = false;
   sync = (player) => {
+    if (player.textureName !== this.textureName) {
+      this.texture = new Texture(player.textureName);
+    }
     Object.assign(this, { ...player, position: this.position });
     const pos = { x: this.position[0], y: this.position[1] };
     gsap.to(pos, {
