@@ -2,10 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import Game from "../public/Game";
 import Timmy from "../public/classes/Timmy";
 import Kevin from "../public/classes/Kevin";
+import Moller from "../public/classes/Moller";
+import Maja from "../public/classes/Maja";
 
 const classMap = {
   timmy: Timmy,
   kevin: Kevin,
+  maja: Maja,
+  moller: Moller,
 };
 
 import io from "socket.io-client";
