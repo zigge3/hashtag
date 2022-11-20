@@ -5,5 +5,5 @@ export default class Johan extends Player {
     super(props);
     this.texture = new Texture("johan.png");
   }
-  size = [50, 100];
+  size = [80, 100];
 }
