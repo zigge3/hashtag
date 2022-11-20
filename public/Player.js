@@ -45,10 +45,7 @@ export default class Player {
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
-    this.velocity = [
-      clamp(velX, -this.maxSpeed[0], this.maxSpeed[0]),
-      Math.min(velY + gravY, this.maxSpeed[1]),
-    ];
+    this.velocity = [velX, Math.min(velY + gravY, this.maxSpeed[1])];
     const [posX, posY] = this.position;
     const newPos = [
       posX + velX * (delta / targetUpdate),
@@ -136,12 +133,12 @@ export default class Player {
     const [ax, ay] = this.acceleration;
     const { inputs } = this.inputHandler;
     if (inputs.right) {
-      this.setXVelocity(x + ax);
+      this.setXVelocity(Math.min(x + ax, this.maxSpeed[0]));
       this.faceingRight = true;
       this.hasVerticalMovement = true;
     }
     if (inputs.left) {
-      this.setXVelocity(x - ax);
+      this.setXVelocity(Math.max(x - ax, -this.maxSpeed[0]));
       this.faceingRight = false;
       this.hasVerticalMovement = true;
     }
@@ -179,9 +176,9 @@ export default class Player {
 
   hit = ({ attack, player }) => {
     if (this.position[0] > player.position[0]) {
-      this.setXVelocity(10);
+      this.setXVelocity(6);
     } else {
-      this.setXVelocity(-10);
+      this.setXVelocity(-6);
     }
     this.setYVelocity(-4);
 
