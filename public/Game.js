@@ -94,7 +94,6 @@ export default class Game {
       this.clearScreen();
       this.tick({ world, delta });
       this.drawInputs();
-
       requestAnimationFrame(this.update);
     }
   };

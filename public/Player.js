@@ -5,10 +5,11 @@ import variables from "./variables";
 const charList = ["kevin.png", "timmy.png"];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 let TIME_SCALE = 70;
+let targetUpdate = 4;
 export default class Player {
   constructor(options) {
     if (options.timeScale) {
-      TIME_SCALE = options.timeScale;
+      targetUpdate = options.timeScale;
     }
     Object.assign(this, options);
   }
@@ -16,7 +17,7 @@ export default class Player {
   drag = 0.05;
   position = [0, 0];
   size = [50, 100];
-  acceleration = [0.1, 7];
+  acceleration = [0.01, 7];
   maxSpeed = [5, 8];
   velocity = [0, 0];
   isGrounded = false;
@@ -31,7 +32,8 @@ export default class Player {
 
   update = ({ world, delta }) => {
     const { objects } = world;
-    this.getInputs();
+    this.delta = delta;
+    this.getInputs(delta);
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
@@ -41,8 +43,8 @@ export default class Player {
     ];
     const [posX, posY] = this.position;
     const newPos = [
-      posX + velX * (delta / TIME_SCALE),
-      posY + velY * (delta / TIME_SCALE),
+      posX + velX * (delta / targetUpdate),
+      posY + velY * (delta / targetUpdate),
     ];
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
@@ -94,18 +96,20 @@ export default class Player {
   };
   verticalCollision = (obj) => {
     const [velX, velY] = this.velocity;
+    const { delta } = this;
     const [posX, posY] = this.position;
     return this.checkCollision(
-      [posX, posY + velY, ...this.size],
+      [posX, posY + velY * (delta / targetUpdate), ...this.size],
       [...obj.position, ...obj.size]
     );
   };
 
   horizontalCollision = (obj) => {
     const [velX, velY] = this.velocity;
+    const { delta } = this;
     const [posX, posY] = this.position;
     return this.checkCollision(
-      [posX + velX, posY, ...this.size],
+      [posX + velX * (delta / targetUpdate), posY, ...this.size],
       [...obj.position, ...obj.size]
     );
   };
@@ -119,7 +123,7 @@ export default class Player {
     }
   };
 
-  getInputs = () => {
+  getInputs = (delta) => {
     this.hasVerticalMovement = false;
     const [x] = this.velocity;
     const [ax, ay] = this.acceleration;
