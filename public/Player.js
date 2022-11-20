@@ -24,8 +24,8 @@ export default class Player {
   drag = 0.05;
   position = [0, 0];
   size = [50, 100];
-  acceleration = [0.05, 5];
-  maxSpeed = [3, 6];
+  acceleration = [0.05, 4];
+  maxSpeed = [2, 7];
   velocity = [0, 0];
   hitArea = [0, 50];
   isGrounded = false;
