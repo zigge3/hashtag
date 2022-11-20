@@ -4,7 +4,7 @@ import Timmy from "../public/classes/Timmy";
 import Kevin from "../public/classes/Kevin";
 import Moller from "../public/classes/Moller";
 import Maja from "../public/classes/Maja";
-import Johan from "../public/classes/Johan";
+import Johan from "../public/classes/johan";
 
 const classMap = {
   timmy: Timmy,
