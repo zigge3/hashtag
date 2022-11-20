@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import _ from "underscore";
 import varaibles from "../../public/variables";
+import standard from "../../public/worlds/standard";
 
 class Player {
   constructor(options) {
@@ -39,7 +40,7 @@ const SocketHandler = (req, res) => {
     const io = new Server(res.socket.server);
     res.socket.server.io = io;
     let players = [];
-    let worldObjects = [];
+    let worldObjects = [...standard];
     io.on("connection", (socket) => {
       socket.on("add-player", (data) => {
         const player = new Player({
@@ -48,6 +49,7 @@ const SocketHandler = (req, res) => {
         });
         players.push(player);
         socket.emit("player-added", player.id);
+        socket.emit("world-update", worldObjects);
         socket.on("player-tick", (data) => {
           Object.assign(player, data);
         });

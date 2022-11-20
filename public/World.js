@@ -23,40 +23,5 @@ export default class World {
         aspectRatio: 1.777,
       }),
     }),
-    new WorldObject({
-      id: Math.random() * 100,
-      position: [0, window.innerHeight - 100],
-      size: [window.innerWidth, 100],
-      isStatic: true,
-    }),
-    new WorldObject({
-      id: Math.random() * 100,
-      position: [-20, 0],
-      size: [20, window.innerHeight],
-      isStatic: true,
-    }),
-    new WorldObject({
-      id: Math.random() * 100,
-      position: [window.innerWidth, 0],
-      size: [20, window.innerHeight],
-      isStatic: true,
-    }),
-    new WorldObject({
-      id: Math.random() * 100,
-      position: [0, window.innerHeight - 100],
-      size: [window.innerWidth, 100],
-      texture: new Texture("grass.png", {
-        size: [window.innerWidth, 150],
-        offset: [0, 50],
-      }),
-      isStatic: true,
-    }),
-    new WorldObject({
-      id: Math.random() * 100,
-      position: [500, 500],
-      texture: new Texture("dick.png"),
-      size: [100, 100],
-      isStatic: true,
-    }),
   ];
 }

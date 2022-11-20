@@ -5,10 +5,11 @@ import Texture from "./Texture";
 export default class WorldObject {
   constructor(options) {
     Object.assign(this, options);
-    if (options.textureName) {
-      this.texture = new Texture(options.textureName);
-    }
-    if (this.texture) {
+
+    if (options.textureName || this.texture) {
+      if (!process && !this.texture) {
+        this.texture = new Texture(options.textureName);
+      }
       if (options.isBackground) {
         this.layer = 1;
         this.drawType = variables.DRAW_TYPES.BACKGROUND;
@@ -31,7 +32,6 @@ export default class WorldObject {
     if (player.textureName !== this.textureName) {
       this.texture = new Texture(player.textureName);
     }
-    console.log("asds");
     Object.assign(this, { ...player, position: this.position });
     const pos = { x: this.position[0], y: this.position[1] };
     gsap.to(pos, {
