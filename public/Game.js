@@ -19,7 +19,7 @@ export default class Game {
       tick: this.addTick,
     });
 
-    const player = new Character();
+    const player = new Character({ position: [50, 0] });
     this.player = player;
     socket.emit("add-player", player.toData());
     socket.on("player-added", (id) => {

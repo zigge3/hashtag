@@ -53,14 +53,15 @@ export default class Camera {
     } = obj;
     if (texture.ready) {
       const [cx, cy] = this.position;
-
-      ctx.drawImage(
-        texture.texture,
-        0,
-        0,
-        window.innerHeight * texture.aspectRatio,
-        window.innerHeight
-      );
+      let x, y;
+      if (window.innerHeight * texture.aspectRatio < window.innerWidth) {
+        x = window.innerWidth;
+        y = window.innerWidth / texture.aspectRatio;
+      } else {
+        x = window.innerHeight * texture.aspectRatio;
+        y = window.innerHeight;
+      }
+      ctx.drawImage(texture.texture, 0, 0, x, y);
     }
   };
 

@@ -29,8 +29,6 @@ const SocketHandler = (req, res) => {
     let players = [];
     io.on("connection", (socket) => {
       socket.on("add-player", (data) => {
-        console.log("player added");
-        console.log(data);
         const player = new Player({
           ...data,
           id: _.uniqueId(),

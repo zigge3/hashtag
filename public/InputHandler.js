@@ -6,6 +6,7 @@ const KEYS = {
   large: "x",
   small: "z",
   swap: "c",
+  attack: "space",
 };
 
 export default class InputHandler {
@@ -39,5 +40,6 @@ export default class InputHandler {
     large: false,
     small: false,
     swap: false,
+    attack: false,
   };
 }

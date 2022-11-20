@@ -4,24 +4,23 @@ import Texture from "./Texture";
 import variables from "./variables";
 const charList = ["kevin.png", "timmy.png"];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-const MAX_X = 5;
 const TIME_SCALE = 7;
 export default class Player {
-  constructor() {
-    console.log(this.currentChar);
-    console.log(charList[this.currentChar % charList.length]);
+  constructor(options) {
+    Object.assign(this, options);
   }
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
   size = [50, 100];
+  acceleration = [0.1, 7];
+  maxSpeed = [5, 8];
   velocity = [0, 0];
   isGrounded = false;
   isPlayer = true;
   hasVerticalMovement = false;
   inputHandler = new InputHandler();
   layer = 0;
-  image = null;
   drawType = variables.DRAW_TYPES.TEXTURE;
   currentChar = 0;
 
@@ -33,7 +32,10 @@ export default class Player {
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
-    this.velocity = [clamp(velX, -MAX_X, MAX_X), Math.min(velY + gravY, 8)];
+    this.velocity = [
+      clamp(velX, -this.maxSpeed[0], this.maxSpeed[0]),
+      Math.min(velY + gravY, this.maxSpeed[1]),
+    ];
     const [posX, posY] = this.position;
     const newPos = [
       posX + velX * (delta / TIME_SCALE),
@@ -82,6 +84,8 @@ export default class Player {
         }
 
         this.setXVelocity(0);
+      } else {
+        this.setXPosition(newPos[0]);
       }
     }
   };
@@ -115,19 +119,20 @@ export default class Player {
   getInputs = () => {
     this.hasVerticalMovement = false;
     const [x] = this.velocity;
+    const [ax, ay] = this.acceleration;
     const { inputs } = this.inputHandler;
     if (inputs.right) {
-      this.setXVelocity(x + 0.1);
+      this.setXVelocity(x + ax);
       this.faceingRight = true;
       this.hasVerticalMovement = true;
     }
     if (inputs.left) {
-      this.setXVelocity(x - 0.1);
+      this.setXVelocity(x - ax);
       this.faceingRight = false;
       this.hasVerticalMovement = true;
     }
     if (inputs.up && this.isGrounded) {
-      this.setYVelocity(-7);
+      this.setYVelocity(-ay);
     }
     const [sx, sy] = this.size;
     if (inputs.small) {

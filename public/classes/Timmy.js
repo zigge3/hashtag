@@ -6,4 +6,5 @@ export default class Timmy extends Player {
     this.texture = new Texture("timmy.png");
   }
   size = [100, 150];
+  acceleration = [0.2, 7];
 }
