@@ -4,9 +4,12 @@ import Texture from "./Texture";
 import variables from "./variables";
 const charList = ["kevin.png", "timmy.png"];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-const TIME_SCALE = 7;
+let TIME_SCALE = 70;
 export default class Player {
   constructor(options) {
+    if (options.timeScale) {
+      TIME_SCALE = options.timeScale;
+    }
     Object.assign(this, options);
   }
   id = _.uniqueId();

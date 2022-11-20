@@ -18,13 +18,14 @@ export default function GameComponent({ character }) {
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const type = urlSearchParams.get("type");
-    const id = setTimeout(() => socketInitializer(type), 100);
+    const timeScale = urlSearchParams.get("timeScale");
+    const id = setTimeout(() => socketInitializer({ type, timeScale }), 100);
     return () => {
       clearTimeout(id);
     };
   }, []);
 
-  const socketInitializer = async (type) => {
+  const socketInitializer = async ({ type, timeScale }) => {
     setInit(true);
     await fetch("/api/socket");
     const socket = io();
@@ -34,6 +35,7 @@ export default function GameComponent({ character }) {
     const game = new Game({
       canvas: canvasRef.current,
       socket,
+      timeScale,
       Character: classMap[type] || Kevin,
     });
   };

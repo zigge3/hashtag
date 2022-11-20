@@ -6,7 +6,7 @@ import WorldObject from "./WorldObject";
 
 export default class Game {
   constructor(props) {
-    const { canvas, socket, Character } = props;
+    const { canvas, socket, Character, timeScale } = props;
     this.inputHandler = new InputHandler();
     //Setup canvas
     const ctx = canvas.getContext("2d");
@@ -19,7 +19,7 @@ export default class Game {
       tick: this.addTick,
     });
 
-    const player = new Character({ position: [50, 0] });
+    const player = new Character({ position: [50, 0], timeScale });
     this.player = player;
     socket.emit("add-player", player.toData());
     socket.on("player-added", (id) => {
