@@ -83,11 +83,14 @@ const SocketHandler = (req, res) => {
             .filter((p) => p.id !== player.id)
             .forEach((pl) => {
               const isHit = checkCollision(
-                [...attack.position, ...attack.reach],
+                [...attack.position, ...attack.size],
                 [...pl.position, ...pl.size]
               );
               if (isHit) {
-                pl.socket.emit("is-hit", attack);
+                pl.socket.emit("is-hit", {
+                  attack,
+                  player: Player.toData(player),
+                });
               }
             });
           worldObjects.push(attack);

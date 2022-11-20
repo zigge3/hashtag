@@ -177,9 +177,14 @@ export default class Player {
     this.texture = new Texture(charList[this.currentChar % charList.length]);
   };
 
-  hit = (attack) => {
+  hit = ({ attack, player }) => {
+    if (this.position[0] > player.position[0]) {
+      this.setXVelocity(10);
+    } else {
+      this.setXVelocity(-10);
+    }
     this.setYVelocity(-4);
-    this.setXVelocity(10);
+
     this.velocity;
   };
 
