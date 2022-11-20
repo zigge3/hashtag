@@ -26,7 +26,7 @@ class AttackObj {
   }
   textureName = "pow.png";
   position = [0, 0];
-  size = [30, 30];
+  size = [150, 30];
   reach = [150, 30];
   layer = 3;
   ownerId = 0;
@@ -55,7 +55,13 @@ const SocketHandler = (req, res) => {
         });
         socket.on("attack", (data) => {
           Object.assign(player, data);
-          worldObjects.push(new AttackObj({ position: player.position }));
+          const hit = [
+            player.position[0] + player.hitArea[0],
+            player.position[1] + player.hitArea[1],
+          ];
+          worldObjects.push(
+            new AttackObj({ ownerId: player.id, position: hit })
+          );
           io.emit("world-update", worldObjects);
         });
         socket.on("disconnect", () => {

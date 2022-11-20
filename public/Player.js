@@ -20,6 +20,7 @@ export default class Player {
   acceleration = [0.05, 7];
   maxSpeed = [5, 8];
   velocity = [0, 0];
+  hitArea = [50, 50];
   isGrounded = false;
   isPlayer = true;
   hasVerticalMovement = false;
@@ -222,6 +223,7 @@ export default class Player {
       texture,
       faceingRight,
       isPlayer,
+      hitArea,
     } = this;
 
     return {
@@ -232,6 +234,7 @@ export default class Player {
       size,
       textureName: texture.name,
       isPlayer,
+      hitArea,
     };
   };
 }

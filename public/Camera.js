@@ -76,7 +76,7 @@ export default class Camera {
       const [ox, oy] = texture.offset;
       ctx.save();
       let flipped = 1;
-      if (!faceingRight) {
+      if (faceingRight === false) {
         ctx.scale(-1, 1);
         flipped = -1;
       }
