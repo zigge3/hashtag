@@ -2,7 +2,13 @@ import InputHandler from "./InputHandler";
 import _ from "underscore";
 import Texture from "./Texture";
 import variables from "./variables";
-const charList = ["kevin.png", "timmy.png", "moller.png", "maja.png"];
+const charList = [
+  "kevin.png",
+  "timmy.png",
+  "moller.png",
+  "maja.png",
+  "johan.png",
+];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 let TIME_SCALE = 70;
 let targetUpdate = 4;
