@@ -34,6 +34,7 @@ class AttackObj {
       ];
     }
   }
+  id = _.uniqueId();
   hitArea = [0, 0];
   textureName = "pow.png";
   position = [0, 0];
@@ -90,6 +91,9 @@ const SocketHandler = (req, res) => {
               }
             });
           worldObjects.push(attack);
+          setTimeout(() => {
+            worldObjects = worldObjects.filter((obj) => obj.id !== attack.id);
+          }, 1000);
           io.emit("world-update", worldObjects);
         });
         socket.on("disconnect", () => {
