@@ -38,7 +38,7 @@ export default class Game {
       tick: this.addTick,
     });
 
-    camera.append(player);
+    //camera.append(player);
     this.world.players.push(player);
 
     //Start game loop
@@ -105,7 +105,10 @@ export default class Game {
 
   clearScreen = () => {
     const { ctx } = this;
-    ctx.clearRect(0, 0, ctx.width, ctx.height);
+    ctx.save();
+    ctx.scale(1, 1);
+    ctx.clearRect(0, 0, ctx.width * 2, ctx.height * 2);
+    ctx.restore();
   };
 
   //Closes game and stopping loops

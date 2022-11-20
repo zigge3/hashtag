@@ -2,6 +2,7 @@ import variables from "./variables";
 export default class Camera {
   constructor({ ctx, tick, target }) {
     this.ctx = ctx;
+    ctx.scale(0.5, 0.5);
     tick(this.update);
     tick(this.render);
     if (target) {
@@ -55,11 +56,11 @@ export default class Camera {
       const [cx, cy] = this.position;
       let x, y;
       if (window.innerHeight * texture.aspectRatio < window.innerWidth) {
-        x = window.innerWidth;
-        y = window.innerWidth / texture.aspectRatio;
+        x = 2 * window.innerWidth;
+        y = (2 * window.innerWidth) / texture.aspectRatio;
       } else {
-        x = window.innerHeight * texture.aspectRatio;
-        y = window.innerHeight;
+        x = 2 * window.innerHeight * texture.aspectRatio;
+        y = 2 * window.innerHeight;
       }
       ctx.drawImage(texture.texture, 0, 0, x, y);
     }
