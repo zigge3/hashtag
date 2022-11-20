@@ -51,15 +51,22 @@ export default class Camera {
       texture,
       position: [px, py],
     } = obj;
-    if (texture.isReady) {
+    if (texture.ready) {
       const [cx, cy] = this.position;
-      ctx.drawImage(texture.texture, px - cx, py - cy, ...texture.size);
+
+      ctx.drawImage(
+        texture.texture,
+        0,
+        0,
+        window.innerHeight * texture.aspectRatio,
+        window.innerHeight
+      );
     }
   };
 
   drawTexture = ({ obj }) => {
     const { ctx } = this;
-    const { texture, faceingRight, isPlayer } = obj;
+    const { texture, faceingRight } = obj;
     const [cx, cy] = this.positionWithOffset;
     if (texture && texture.ready) {
       const { size } = obj;
@@ -69,7 +76,6 @@ export default class Camera {
       ctx.save();
       let flipped = 1;
       if (!faceingRight) {
-        console.log("asd");
         ctx.scale(-1, 1);
         flipped = -1;
       }

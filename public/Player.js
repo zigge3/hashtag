@@ -5,11 +5,11 @@ import variables from "./variables";
 const charList = ["kevin.png", "timmy.png"];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const MAX_X = 5;
+const TIME_SCALE = 7;
 export default class Player {
   constructor() {
     console.log(this.currentChar);
     console.log(charList[this.currentChar % charList.length]);
-    this.setCharacter();
   }
   id = _.uniqueId();
   drag = 0.05;
@@ -23,7 +23,7 @@ export default class Player {
   layer = 0;
   image = null;
   drawType = variables.DRAW_TYPES.TEXTURE;
-  currentChar = 1;
+  currentChar = 0;
 
   faceingRight = true;
 
@@ -33,10 +33,12 @@ export default class Player {
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
-    this.velocity = [clamp(velX, -MAX_X, MAX_X), Math.min(velY + gravY, 7)];
+    this.velocity = [clamp(velX, -MAX_X, MAX_X), Math.min(velY + gravY, 8)];
     const [posX, posY] = this.position;
-    const newPos = [posX + velX * (delta / 4), posY + velY * (delta / 5)];
-    this.setFaceing();
+    const newPos = [
+      posX + velX * (delta / TIME_SCALE),
+      posY + velY * (delta / TIME_SCALE),
+    ];
     const collisionFound = [...objects, ...world.objects]
       .filter((a) => a.id !== this.id)
       .filter((a) => a.layer === this.layer)
@@ -110,24 +112,18 @@ export default class Player {
     }
   };
 
-  setFaceing = () => {
-    if (this.velocity[0] > 0) {
-      this.faceingRight = true;
-    } else if (this.velocity[0] < 0) {
-      this.faceingRight = false;
-    }
-  };
-
   getInputs = () => {
     this.hasVerticalMovement = false;
     const [x] = this.velocity;
     const { inputs } = this.inputHandler;
     if (inputs.right) {
       this.setXVelocity(x + 0.1);
+      this.faceingRight = true;
       this.hasVerticalMovement = true;
     }
     if (inputs.left) {
       this.setXVelocity(x - 0.1);
+      this.faceingRight = false;
       this.hasVerticalMovement = true;
     }
     if (inputs.up && this.isGrounded) {

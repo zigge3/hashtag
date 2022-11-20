@@ -15,9 +15,10 @@ export default class World {
       size: [window.innerWidth, window.innerHeight],
       isBackground: true,
       isStatic: true,
+      size: [window.innerWidth, window.innerHeight],
       texture: new Texture("rocky-bg.jpg", {
         size: [window.innerWidth, window.innerHeight],
-        offset: [0, 0],
+        aspectRatio: 1.777,
       }),
     }),
     new WorldObject({
