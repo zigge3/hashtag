@@ -1,8 +1,11 @@
 import Camera from "./Camera";
 import InputHandler from "./InputHandler";
+import Player from "./Player";
 
 import World from "./World";
 import WorldObject from "./WorldObject";
+
+import variables from "./variables";
 
 export default class Game {
   constructor(props) {
@@ -21,14 +24,14 @@ export default class Game {
 
     const player = new Character({ position: [50, 0], timeScale, socket });
     this.player = player;
-    socket.emit("add-player", player.toData());
+    socket.emit("add-player", Player.toData(player));
     socket.on("player-added", (id) => {
       player.id = id;
       socket.on("update", this.syncPlayers);
       socket.on("world-update", this.syncWorld);
       setInterval(() => {
-        socket.emit("player-tick", player.toData());
-      }, 100);
+        socket.emit("player-tick", Player.toData(player));
+      }, variables.SYNC_INTERVAL);
     });
     const camera = new Camera({
       ctx,
@@ -64,6 +67,7 @@ export default class Game {
           worldPlayers.push(new WorldObject(player));
         }
       });
+    console.log(worldPlayers);
     this.world.players = worldPlayers.filter(
       (obj) => obj.isStatic || players.find((player) => player.id === obj.id)
     );

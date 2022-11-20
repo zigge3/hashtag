@@ -10,7 +10,7 @@ const charList = [
   "johan.png",
 ];
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-let TIME_SCALE = 70;
+
 let targetUpdate = 4;
 export default class Player {
   constructor(options) {
@@ -18,6 +18,7 @@ export default class Player {
       targetUpdate = options.timeScale;
     }
     Object.assign(this, options);
+    options.socket.on("is-hit", this.hit);
   }
   id = _.uniqueId();
   drag = 0.05;
@@ -169,11 +170,16 @@ export default class Player {
   };
 
   attack = () => {
-    this.socket.emit("attack", this.toData());
+    this.socket.emit("attack", Player.toData(this));
   };
 
   setCharacter = () => {
     this.texture = new Texture(charList[this.currentChar % charList.length]);
+  };
+
+  hit = (attack) => {
+    console.log(attack);
+    this.velocity;
   };
 
   checkCollision = (posA, posB) => {
@@ -220,25 +226,25 @@ export default class Player {
     this.position = [this.position[0], y];
   };
 
-  toData = () => {
+  static toData = (player) => {
     const {
+      id,
       velocity,
       position,
-      inputHandler,
       size,
-      texture,
+      textureName,
       faceingRight,
       isPlayer,
       hitArea,
-    } = this;
+    } = player;
 
     return {
+      id,
       faceingRight,
       velocity,
       position,
-      inputs: inputHandler.inputs,
       size,
-      textureName: texture.name,
+      textureName,
       isPlayer,
       hitArea,
     };
