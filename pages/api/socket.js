@@ -54,7 +54,6 @@ const SocketHandler = (req, res) => {
           Object.assign(player, data);
         });
         socket.on("attack", (data) => {
-          console.log(data);
           Object.assign(player, data);
           worldObjects.push(new AttackObj({ position: player.position }));
           io.emit("world-update", worldObjects);

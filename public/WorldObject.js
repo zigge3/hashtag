@@ -2,18 +2,17 @@ import variables from "./variables";
 import gsap from "gsap";
 import _ from "underscore";
 import Texture from "./Texture";
+
 export default class WorldObject {
   constructor(options) {
     Object.assign(this, options);
 
     if (options.textureName || this.texture) {
-      if (!process && !this.texture) {
-        this.texture = new Texture(options.textureName);
-      }
       if (options.isBackground) {
         this.layer = 1;
         this.drawType = variables.DRAW_TYPES.BACKGROUND;
       } else {
+        this.texture = new Texture(options.textureName);
         this.drawType = variables.DRAW_TYPES.TEXTURE;
       }
     }
