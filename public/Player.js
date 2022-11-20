@@ -24,10 +24,10 @@ export default class Player {
   drag = 0.05;
   position = [0, 0];
   size = [50, 100];
-  acceleration = [0.05, 7];
-  maxSpeed = [5, 8];
+  acceleration = [0.05, 5];
+  maxSpeed = [3, 6];
   velocity = [0, 0];
-  hitArea = [50, 50];
+  hitArea = [0, 50];
   isGrounded = false;
   isPlayer = true;
   hasVerticalMovement = false;
@@ -178,7 +178,8 @@ export default class Player {
   };
 
   hit = (attack) => {
-    console.log(attack);
+    this.setYVelocity(-4);
+    this.setXVelocity(10);
     this.velocity;
   };
 

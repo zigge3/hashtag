@@ -67,7 +67,6 @@ export default class Game {
           worldPlayers.push(new WorldObject(player));
         }
       });
-    console.log(worldPlayers);
     this.world.players = worldPlayers.filter(
       (obj) => obj.isStatic || players.find((player) => player.id === obj.id)
     );
@@ -91,13 +90,6 @@ export default class Game {
     this.listeners.push(func);
   };
 
-  drawInputs = () => {
-    const { ctx } = this;
-    ctx.fillStyle = "white";
-    ctx.font = "20px serif";
-    ctx.fillText(JSON.stringify(this.inputHandler.inputs), 100, 100);
-  };
-
   //Game loop based on frame count
   update = () => {
     const { world } = this;
@@ -107,7 +99,6 @@ export default class Game {
     if (this.running) {
       this.clearScreen();
       this.tick({ world, delta });
-      this.drawInputs();
       requestAnimationFrame(this.update);
     }
   };

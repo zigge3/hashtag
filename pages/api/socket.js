@@ -21,11 +21,24 @@ const checkCollision = (posA, posB) => {
 class AttackObj {
   constructor(props) {
     Object.assign(this, props);
+    const [x, y] = this.position;
+    if (this.flipped) {
+      this.position = [
+        x - this.size[0] - this.reach[0] - this.hitArea[0],
+        y + this.hitArea[1],
+      ];
+    } else {
+      this.position = [
+        x + this.reach[0] + this.hitArea[0],
+        y + this.hitArea[1],
+      ];
+    }
   }
+  hitArea = [0, 0];
   textureName = "pow.png";
   position = [0, 0];
   size = [150, 30];
-  reach = [150, 30];
+  reach = [0, 30];
   layer = 3;
   ownerId = 0;
 }
@@ -54,11 +67,14 @@ const SocketHandler = (req, res) => {
         });
         socket.on("attack", (data) => {
           Object.assign(player, data);
+
           const attack = new AttackObj({
             ownerId: player.id,
+            flipped: !player.faceingRight,
+            hitArea: player.hitArea,
             position: [
-              player.position[0] + player.hitArea[0],
-              player.position[1] + player.hitArea[1],
+              player.position[0] + player.size[0] / 2,
+              player.position[1],
             ],
           });
 
