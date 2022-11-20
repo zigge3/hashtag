@@ -19,12 +19,13 @@ export default class Game {
       tick: this.addTick,
     });
 
-    const player = new Character({ position: [50, 0], timeScale });
+    const player = new Character({ position: [50, 0], timeScale, socket });
     this.player = player;
     socket.emit("add-player", player.toData());
     socket.on("player-added", (id) => {
       player.id = id;
-      socket.on("update", this.syncWorld);
+      socket.on("update", this.syncPlayers);
+      socket.on("world-update", this.syncWorld);
       setInterval(() => {
         socket.emit("player-tick", player.toData());
       }, 100);
@@ -35,7 +36,7 @@ export default class Game {
     });
 
     camera.append(player);
-    this.world.objects.push(player);
+    this.world.players.push(player);
 
     //Start game loop
 
@@ -49,23 +50,32 @@ export default class Game {
 
   last = performance.now();
 
-  syncWorld = (players) => {
-    const { objects } = this.world;
+  syncPlayers = (players) => {
+    const worldPlayers = this.world.players;
     players
       .filter((player) => player.id !== this.player.id)
       .forEach((player) => {
-        const obj = objects.find((o) => {
+        const obj = worldPlayers.find((o) => {
           return o.id === player.id;
         });
         if (obj) {
           obj?.sync(player);
         } else {
-          objects.push(new WorldObject(player));
+          worldPlayers.push(new WorldObject(player));
         }
       });
-    this.world.objects = objects.filter(
+    this.world.players = worldPlayers.filter(
       (obj) => obj.isStatic || players.find((player) => player.id === obj.id)
     );
+  };
+
+  syncWorld = (world) => {
+    this.world.objects = [
+      ...this.world.objects.filter((a) => a.isBackground),
+      ...world.map((obj) => {
+        return new WorldObject(obj);
+      }),
+    ];
   };
 
   //Updates objects in game world

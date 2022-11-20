@@ -19,6 +19,18 @@ class Player {
   };
 }
 
+class AttackObj {
+  constructor(props) {
+    Object.assign(this, props);
+  }
+  textureName = "pow.png";
+  position = [0, 0];
+  size = [30, 30];
+  reach = [150, 30];
+  layer = 3;
+  ownerId = 0;
+}
+
 const SocketHandler = (req, res) => {
   if (res.socket.server.io) {
     console.log("Socket is already running");
@@ -27,6 +39,7 @@ const SocketHandler = (req, res) => {
     const io = new Server(res.socket.server);
     res.socket.server.io = io;
     let players = [];
+    let worldObjects = [];
     io.on("connection", (socket) => {
       socket.on("add-player", (data) => {
         const player = new Player({
@@ -37,6 +50,12 @@ const SocketHandler = (req, res) => {
         socket.emit("player-added", player.id);
         socket.on("player-tick", (data) => {
           Object.assign(player, data);
+        });
+        socket.on("attack", (data) => {
+          console.log(data);
+          Object.assign(player, data);
+          worldObjects.push(new AttackObj({ position: player.position }));
+          io.emit("world-update", worldObjects);
         });
         socket.on("disconnect", () => {
           players = players.filter((pl) => pl.id !== player.id);

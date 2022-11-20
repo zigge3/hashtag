@@ -5,5 +5,5 @@ export default class Moller extends Player {
     super(props);
     this.texture = new Texture("moller.png");
   }
-  size = [100, 100];
+  size = [50, 100];
 }

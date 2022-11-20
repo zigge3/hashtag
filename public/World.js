@@ -3,11 +3,13 @@ import Texture from "./Texture";
 import WorldObject from "./WorldObject";
 export default class World {
   constructor({ tick }) {
-    tick((options) =>
-      this.objects.forEach((obj) => obj.update && obj.update(options))
-    );
+    tick((options) => {
+      this.objects.forEach((obj) => obj.update && obj.update(options));
+      this.players.forEach((obj) => obj.update && obj.update(options));
+    });
   }
   gravity = [0, 10];
+  players = [];
   objects = [
     new WorldObject({
       id: Math.random() * 100,

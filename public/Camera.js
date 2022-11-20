@@ -16,8 +16,8 @@ export default class Camera {
   };
 
   render = ({ world }) => {
-    const { objects } = world;
-    objects
+    const { objects, players } = world;
+    [...objects, ...players]
       .sort((a, b) => a.isBackground < b.isBackground)
       .forEach((obj) => {
         switch (obj.drawType) {

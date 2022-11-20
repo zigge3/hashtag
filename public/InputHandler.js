@@ -6,12 +6,14 @@ const KEYS = {
   large: "x",
   small: "z",
   swap: "c",
-  attack: "space",
+  attack: " ",
 };
 
 export default class InputHandler {
   constructor() {
-    document.addEventListener("keydown", ({ key }) => {
+    document.addEventListener("keydown", (e) => {
+      const { key } = e;
+      e.preventDefault();
       Object.keys(KEYS).forEach((input) => {
         if (KEYS[input] === key) {
           this.inputs[input] = true;

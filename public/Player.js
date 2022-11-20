@@ -17,7 +17,7 @@ export default class Player {
   drag = 0.05;
   position = [0, 0];
   size = [50, 100];
-  acceleration = [0.01, 7];
+  acceleration = [0.05, 7];
   maxSpeed = [5, 8];
   velocity = [0, 0];
   isGrounded = false;
@@ -27,7 +27,7 @@ export default class Player {
   layer = 0;
   drawType = variables.DRAW_TYPES.TEXTURE;
   currentChar = 0;
-
+  socket = null;
   faceingRight = true;
 
   update = ({ world, delta }) => {
@@ -47,7 +47,6 @@ export default class Player {
       posY + velY * (delta / targetUpdate),
     ];
     const collisionFound = [...objects, ...world.objects]
-      .filter((a) => a.id !== this.id)
       .filter((a) => a.layer === this.layer)
       .reduce((acc, obj) => {
         if (
@@ -123,7 +122,7 @@ export default class Player {
     }
   };
 
-  getInputs = (delta) => {
+  getInputs = () => {
     this.hasVerticalMovement = false;
     const [x] = this.velocity;
     const [ax, ay] = this.acceleration;
@@ -155,6 +154,15 @@ export default class Player {
       this.inputHandler.consumeInput("swap");
       this.setCharacter();
     }
+
+    if (inputs.attack) {
+      this.attack();
+      this.inputHandler.consumeInput("attack");
+    }
+  };
+
+  attack = () => {
+    this.socket.emit("attack", this.toData());
   };
 
   setCharacter = () => {

@@ -31,6 +31,7 @@ export default class WorldObject {
     if (player.textureName !== this.textureName) {
       this.texture = new Texture(player.textureName);
     }
+    console.log("asds");
     Object.assign(this, { ...player, position: this.position });
     const pos = { x: this.position[0], y: this.position[1] };
     gsap.to(pos, {
