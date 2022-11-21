@@ -2,6 +2,7 @@ import InputHandler from "./InputHandler";
 import _ from "underscore";
 import Texture from "./Texture";
 import variables from "./variables";
+import Energy from "./ui/EnergyBar";
 const charList = [
   "kevin.png",
   "timmy.png",
@@ -28,6 +29,10 @@ export default class Player {
   maxSpeed = [2, 7];
   velocity = [0, 0];
   hitArea = [0, 50];
+  stagger = 1;
+  baseHit = [6, 4];
+  energy = 100;
+  ui = [new Energy(this)];
   isGrounded = false;
   isPlayer = true;
   hasVerticalMovement = false;
@@ -167,7 +172,7 @@ export default class Player {
   };
 
   attack = () => {
-    this.socket.emit("attack", Player.toData(this));
+    this.socket.emit("attack", { player: Player.toData(this), damage: 0.1 });
   };
 
   setCharacter = () => {
@@ -175,12 +180,13 @@ export default class Player {
   };
 
   hit = ({ attack, player }) => {
+    this.stagger += attack.damage;
     if (this.position[0] > player.position[0]) {
-      this.setXVelocity(6);
+      this.setXVelocity(this.baseHit[0] * this.stagger);
     } else {
-      this.setXVelocity(-6);
+      this.setXVelocity(-this.baseHit[0] * this.stagger);
     }
-    this.setYVelocity(-4);
+    this.setYVelocity(-this.baseHit[1] * this.stagger);
 
     this.velocity;
   };

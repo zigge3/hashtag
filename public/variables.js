@@ -4,5 +4,6 @@ export default {
     BACKGROUND: "bg",
     OBJECT: "obj",
     TEXTURE: "txt",
+    CUSTOM: "cst",
   },
 };

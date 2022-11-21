@@ -9,6 +9,7 @@ export default class World {
     });
   }
   gravity = [0, 10];
+  size = [1500, 1000];
   players = [];
   objects = [
     new WorldObject({

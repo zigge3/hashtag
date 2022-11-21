@@ -34,6 +34,7 @@ class AttackObj {
       ];
     }
   }
+  damage = 1;
   id = _.uniqueId();
   hitArea = [0, 0];
   textureName = "pow.png";
@@ -67,12 +68,14 @@ const SocketHandler = (req, res) => {
           Object.assign(player, data);
         });
         socket.on("attack", (data) => {
-          Object.assign(player, data);
+          Object.assign(player, data.player);
+          const { damage } = data;
 
           const attack = new AttackObj({
             ownerId: player.id,
             flipped: !player.faceingRight,
             hitArea: player.hitArea,
+            damage,
             position: [
               player.position[0] + player.size[0] / 2,
               player.position[1],

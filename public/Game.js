@@ -6,6 +6,7 @@ import World from "./World";
 import WorldObject from "./WorldObject";
 
 import variables from "./variables";
+import Energy from "./ui/energy";
 
 export default class Game {
   constructor(props) {
@@ -36,9 +37,9 @@ export default class Game {
     const camera = new Camera({
       ctx,
       tick: this.addTick,
+      world: this.world,
     });
-
-    //camera.append(player);
+    camera.append(player);
     this.world.players.push(player);
 
     //Start game loop
@@ -98,7 +99,7 @@ export default class Game {
     this.last = now;
     if (this.running) {
       this.clearScreen();
-      this.tick({ world, delta });
+      this.tick({ world, delta, player: this.player });
       requestAnimationFrame(this.update);
     }
   };

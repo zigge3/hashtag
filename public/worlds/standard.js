@@ -8,6 +8,12 @@ export default [
   }),
   new WorldObject({
     id: Math.random() * 100,
+    position: [0, 0],
+    size: [10, 10],
+    isStatic: true,
+  }),
+  new WorldObject({
+    id: Math.random() * 100,
     position: [-50, 0],
     size: [100, 1000],
     isStatic: true,

@@ -1,25 +1,27 @@
 import variables from "./variables";
+const cameraScale = 0.75;
 export default class Camera {
-  constructor({ ctx, tick, target }) {
+  constructor({ ctx, tick, target, world }) {
     this.ctx = ctx;
-    ctx.scale(0.5, 0.5);
     tick(this.update);
     tick(this.render);
+    ctx.scale(cameraScale, cameraScale);
     if (target) {
       this.append(target);
     }
   }
 
   position = [0, 0];
+
   positionWithOffset = [0, 0];
   target = {
     position: [0, 0],
   };
 
-  render = ({ world }) => {
+  render = ({ world, player }) => {
     const { objects, players } = world;
     [...objects, ...players]
-      .sort((a, b) => a.isBackground < b.isBackground)
+      .sort((a, b) => a.layer < b.layer)
       .forEach((obj) => {
         switch (obj.drawType) {
           case variables.DRAW_TYPES.BACKGROUND:
@@ -33,6 +35,10 @@ export default class Camera {
             break;
         }
       });
+
+    player.ui.forEach((ui) => {
+      ui.draw(this);
+    });
   };
 
   drawDefault = ({ obj }) => {
@@ -48,22 +54,24 @@ export default class Camera {
 
   drawBackground = ({ obj }) => {
     const { ctx } = this;
-    const {
-      texture,
-      position: [px, py],
-    } = obj;
+    const { texture } = obj;
     if (texture.ready) {
-      const [cx, cy] = this.position;
       let x, y;
       if (window.innerHeight * texture.aspectRatio < window.innerWidth) {
-        x = 2 * window.innerWidth;
-        y = (2 * window.innerWidth) / texture.aspectRatio;
+        x = window.innerWidth / cameraScale;
+        y = window.innerWidth / cameraScale / texture.aspectRatio;
       } else {
-        x = 2 * window.innerHeight * texture.aspectRatio;
-        y = 2 * window.innerHeight;
+        x = (window.innerHeight / cameraScale) * texture.aspectRatio;
+        y = window.innerHeight / cameraScale;
       }
       ctx.drawImage(texture.texture, 0, 0, x, y);
     }
+  };
+
+  getRelativePosition = (position) => {
+    const [x, y] = position;
+    const [px, py] = this.positionWithOffset;
+    return [x - px, y - py];
   };
 
   drawTexture = ({ obj }) => {
