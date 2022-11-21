@@ -30,8 +30,12 @@ export default class Player {
   velocity = [0, 0];
   hitArea = [0, 50];
   stagger = 1;
+  attackCost = 15;
+  jumpCost = 4;
   baseHit = [6, 4];
+  energyRate = 100;
   energy = 100;
+  maxEnergy = 100;
   ui = [new Energy(this)];
   isGrounded = false;
   isPlayer = true;
@@ -47,6 +51,7 @@ export default class Player {
     const { objects } = world;
     this.delta = delta;
     this.getInputs(delta);
+    this.regenerateEnergy(delta);
     !this.hasVerticalMovement && this.setDrag();
     const [velX, velY] = this.velocity;
     const [gravX, gravY] = world.gravity.map((x) => x * (delta / 1000));
@@ -148,7 +153,9 @@ export default class Player {
       this.hasVerticalMovement = true;
     }
     if (inputs.up && this.isGrounded) {
-      this.setYVelocity(-ay);
+      if (this.drainEnergy(this.jumpCost)) {
+        this.setYVelocity(-ay);
+      }
     }
     const [sx, sy] = this.size;
     if (inputs.small) {
@@ -166,17 +173,38 @@ export default class Player {
     }
 
     if (inputs.attack) {
-      this.attack();
-      this.inputHandler.consumeInput("attack");
+      if (this.drainEnergy(this.attackCost)) {
+        this.attack();
+        this.inputHandler.consumeInput("attack");
+      }
     }
   };
 
   attack = () => {
-    this.socket.emit("attack", { player: Player.toData(this), damage: 0.1 });
+    this.socket.emit("attack", {
+      player: Player.toData(this),
+      damage: 0.1,
+    });
+  };
+
+  drainEnergy = (cost) => {
+    if (this.energy > cost) {
+      this.energy -= cost;
+      return true;
+    } else {
+      return false;
+    }
   };
 
   setCharacter = () => {
     this.texture = new Texture(charList[this.currentChar % charList.length]);
+  };
+
+  regenerateEnergy = (delta) => {
+    this.energy = Math.min(
+      this.maxEnergy,
+      this.energy + delta / this.energyRate
+    );
   };
 
   hit = ({ attack, player }) => {
