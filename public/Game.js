@@ -6,7 +6,6 @@ import World from "./World";
 import WorldObject from "./WorldObject";
 
 import variables from "./variables";
-import Energy from "./ui/energy";
 
 export default class Game {
   constructor(props) {
