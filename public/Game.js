@@ -21,23 +21,31 @@ export default class Game {
     this.world = new World({
       tick: this.addTick,
     });
-
-    const player = new Character({ position: [50, 0], timeScale, socket });
-    this.player = player;
-    socket.emit("add-player", Player.toData(player));
-    socket.on("player-added", (id) => {
-      player.id = id;
-      socket.on("update", this.syncPlayers);
-      socket.on("world-update", this.syncWorld);
-      setInterval(() => {
-        socket.emit("player-tick", Player.toData(player));
-      }, variables.SYNC_INTERVAL);
-    });
     const camera = new Camera({
       ctx,
       tick: this.addTick,
       world: this.world,
     });
+    const player = new Character({
+      world: this.world,
+      position: [50, 0],
+      timeScale,
+      socket,
+      camera,
+    });
+    this.player = player;
+    if (this.socket) {
+      socket.emit("add-player", Player.toData(player));
+      socket.on("player-added", (id) => {
+        player.id = id;
+        socket.on("update", this.syncPlayers);
+        socket.on("world-update", this.syncWorld);
+        setInterval(() => {
+          socket.emit("player-tick", Player.toData(player));
+        }, variables.SYNC_INTERVAL);
+      });
+    }
+
     camera.append(player);
     this.world.players.push(player);
 

@@ -1,16 +1,16 @@
 import variables from "./variables";
-const cameraScale = 0.75;
+
 export default class Camera {
   constructor({ ctx, tick, target, world }) {
     this.ctx = ctx;
     tick(this.update);
     tick(this.render);
-    ctx.scale(cameraScale, cameraScale);
+    ctx.scale(this.cameraScale, this.cameraScale);
     if (target) {
       this.append(target);
     }
   }
-
+  cameraScale = 0.75;
   position = [0, 0];
 
   positionWithOffset = [0, 0];
@@ -53,7 +53,7 @@ export default class Camera {
   };
 
   drawBackground = ({ obj }) => {
-    const { ctx } = this;
+    const { ctx, cameraScale } = this;
     const { texture } = obj;
     if (texture.ready) {
       let x, y;

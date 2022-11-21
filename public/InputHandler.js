@@ -28,6 +28,16 @@ export default class InputHandler {
         }
       });
     });
+
+    document.addEventListener("mousedown", (e) => {
+      this.inputs.mouseDown = true;
+    });
+    document.addEventListener("mousemove", (e) => {
+      this.inputs.mouse = [e.offsetX, e.offsetY];
+    });
+    document.addEventListener("mouseup", (e) => {
+      this.inputs.mouseDown = false;
+    });
   }
 
   consumeInput = (input) => {
@@ -43,5 +53,7 @@ export default class InputHandler {
     small: false,
     swap: false,
     attack: false,
+    mouseDown: false,
+    mouse: [0, 0],
   };
 }
