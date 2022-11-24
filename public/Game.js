@@ -11,6 +11,9 @@ export default class Game {
   constructor(props) {
     const { canvas, socket, Character, timeScale, characterOptions } = props;
     this.inputHandler = new InputHandler();
+    addEventListener("focus", (event) => {
+      this.last = performance.now();
+    });
     //Setup canvas
     const ctx = canvas.getContext("2d");
     this.ctx = ctx;
