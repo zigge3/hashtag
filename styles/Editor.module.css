@@ -1,0 +1,17 @@
+.preview {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 150px;
+  width: 100vw;
+  background-color: white;
+  color: black;
+  display: flex;
+  overflow-x: scroll;
+  padding: 12px;
+}
+
+.imgPreview {
+  margin: 12px;
+  border: 1px solid black;
+}
