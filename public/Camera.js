@@ -10,7 +10,7 @@ export default class Camera {
       this.append(target);
     }
   }
-  cameraScale = 0.75;
+  cameraScale = 1;
   position = [0, 0];
 
   positionWithOffset = [0, 0];

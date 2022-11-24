@@ -8,6 +8,24 @@ export default class World {
       this.players.forEach((obj) => obj.update && obj.update(options));
     });
   }
+  add = (obj) => {
+    this.objects.push(obj);
+  };
+
+  remove = (id) => {
+    console.log(this.objects.length);
+    this.objects = this.objects.filter((obj) => id !== obj.id);
+  };
+
+  print = () => {
+    console.log(
+      this.objects.map((obj) => {
+        const { position, size, textureName } = obj;
+        return { position, size, textureName };
+      })
+    );
+  };
+
   gravity = [0, 10];
   size = [1500, 1000];
   players = [];

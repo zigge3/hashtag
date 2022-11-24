@@ -6,7 +6,9 @@ import Texture from "./Texture";
 export default class WorldObject {
   constructor(options) {
     Object.assign(this, options);
-
+    if (!this.id) {
+      this.id = Math.random();
+    }
     if (options.textureName || this.texture) {
       if (options.isBackground) {
         this.layer = 1;

@@ -9,7 +9,7 @@ import variables from "./variables";
 
 export default class Game {
   constructor(props) {
-    const { canvas, socket, Character, timeScale } = props;
+    const { canvas, socket, Character, timeScale, characterOptions } = props;
     this.inputHandler = new InputHandler();
     //Setup canvas
     const ctx = canvas.getContext("2d");
@@ -32,6 +32,8 @@ export default class Game {
       timeScale,
       socket,
       camera,
+      tick: this.addTick,
+      ...characterOptions,
     });
     this.player = player;
     if (this.socket) {

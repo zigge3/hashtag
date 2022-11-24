@@ -1,7 +1,7 @@
 const KEYS = {
   up: "w",
   left: "a",
-  backwards: "s",
+  down: "s",
   right: "d",
   large: "x",
   small: "z",
@@ -14,6 +14,7 @@ export default class InputHandler {
     document.addEventListener("keydown", (e) => {
       const { key } = e;
       e.preventDefault();
+      console.log(key);
       Object.keys(KEYS).forEach((input) => {
         if (KEYS[input] === key) {
           this.inputs[input] = true;
@@ -21,7 +22,8 @@ export default class InputHandler {
       });
     });
 
-    document.addEventListener("keyup", ({ key }) => {
+    document.addEventListener("keyup", (e) => {
+      const { key } = e;
       Object.keys(KEYS).forEach((input) => {
         if (KEYS[input] === key) {
           this.inputs[input] = false;
@@ -47,7 +49,7 @@ export default class InputHandler {
   inputs = {
     up: false,
     left: false,
-    backwards: false,
+    down: false,
     right: false,
     large: false,
     small: false,
