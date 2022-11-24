@@ -31,6 +31,7 @@ export default function Editor(props) {
         {props.images.map((image) => {
           return (
             <img
+              key={image}
               onClick={() => onPick(image)}
               className={styles.imgPreview}
               src={`../images/${image}`}

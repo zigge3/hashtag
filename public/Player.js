@@ -154,6 +154,7 @@ export default class Player {
     }
     if (inputs.up && this.isGrounded) {
       if (this.drainEnergy(this.jumpCost)) {
+        this.inputHandler.consumeInput("up");
         this.setYVelocity(-ay);
       }
     }
