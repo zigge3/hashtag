@@ -32,6 +32,11 @@ export default class World {
   gravity = [0, 10];
   size = [1500, 1000];
   players = [];
+  startingPos = [
+    [377, 159.5],
+    [-129, -164.5],
+    [994, -53.5],
+  ];
   objects = [
     new WorldObject({
       id: Math.random() * 100,

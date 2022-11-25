@@ -23,16 +23,16 @@ export default class EditorCharacter {
   keyboardInputs = () => {
     const { inputs } = this.inputHandler;
     if (inputs.right) {
-      this.position = [this.position[0] + 1, this.position[1]];
+      this.position = [this.position[0] + 3, this.position[1]];
     }
     if (inputs.left) {
-      this.position = [this.position[0] - 1, this.position[1]];
+      this.position = [this.position[0] - 3, this.position[1]];
     }
     if (inputs.up) {
-      this.position = [this.position[0], this.position[1] - 1];
+      this.position = [this.position[0], this.position[1] - 3];
     }
     if (inputs.down) {
-      this.position = [this.position[0], this.position[1] + 1];
+      this.position = [this.position[0], this.position[1] + 3];
     }
     if (inputs.small) {
       this.inputHandler.consumeInput("small");
@@ -46,6 +46,12 @@ export default class EditorCharacter {
     if (inputs.attack) {
       this.inputHandler.consumeInput("attack");
       this.world.print();
+    }
+
+    if (inputs.scan) {
+      const x = window.innerWidth / 2 - this.position[0];
+      const y = window.innerHeight / 2 - this.position[1];
+      console.log([inputs.mouse[0] - x, inputs.mouse[1] - y]);
     }
   };
 

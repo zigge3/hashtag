@@ -20,7 +20,11 @@ export default class Player {
     }
     Object.assign(this, options);
     options.socket.on("is-hit", this.hit);
+    if (!(this.position[0] + this.position[1])) {
+      this.respawn();
+    }
   }
+  world = null;
   id = _.uniqueId();
   drag = 0.05;
   position = [0, 0];
@@ -255,7 +259,15 @@ export default class Player {
     this.setYVelocity(-this.baseHit[1] * this.stagger);
   };
 
-  die = () => {};
+  die = () => {
+    this.respawn();
+  };
+  respawn = () => {
+    this.position =
+      this.world.startingPos[
+        Math.floor(Math.random() * this.world.startingPos.length)
+      ];
+  };
 
   checkCollision = (posA, posB) => {
     const [r1X, r1Y, r1W, r1H] = posA;

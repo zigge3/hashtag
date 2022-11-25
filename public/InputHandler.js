@@ -6,6 +6,7 @@ const KEYS = {
   large: "x",
   small: "z",
   swap: "c",
+  scan: "v",
   attack: " ",
 };
 
@@ -56,5 +57,6 @@ export default class InputHandler {
     attack: false,
     mouseDown: false,
     mouse: [0, 0],
+    scan: false,
   };
 }

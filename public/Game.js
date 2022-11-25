@@ -39,7 +39,6 @@ export default class Game {
     });
     const player = new Character({
       world: this.world,
-      position: [50, 0],
       timeScale,
       socket,
       camera,
