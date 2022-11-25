@@ -1,5 +1,5 @@
 export default {
-  SYNC_INTERVAL: 60,
+  SYNC_INTERVAL: 100,
   DRAW_TYPES: {
     BACKGROUND: "bg",
     OBJECT: "obj",
