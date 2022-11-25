@@ -6,4 +6,7 @@ export default {
     TEXTURE: "txt",
     CUSTOM: "cst",
   },
+  TRIGGER_TYPES: {
+    DEATH_TRIGGER: "dth",
+  },
 };

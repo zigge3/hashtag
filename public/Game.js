@@ -9,7 +9,14 @@ import variables from "./variables";
 
 export default class Game {
   constructor(props) {
-    const { canvas, socket, Character, timeScale, characterOptions } = props;
+    const {
+      canvas,
+      socket,
+      Character,
+      timeScale,
+      characterOptions,
+      worldObjects,
+    } = props;
     this.inputHandler = new InputHandler();
     addEventListener("focus", (event) => {
       this.last = performance.now();
@@ -23,6 +30,7 @@ export default class Game {
     ctx.height = canvas.height;
     this.world = new World({
       tick: this.addTick,
+      worldObjects,
     });
     const camera = new Camera({
       ctx,

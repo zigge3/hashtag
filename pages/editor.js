@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import EditorCharacter from "../public/EditorCharacter";
 import Game from "../public/Game";
+import standard from "../public/worlds/standard";
 import styles from "../styles/Editor.module.css";
 
 export default function Editor(props) {
@@ -15,6 +16,7 @@ export default function Editor(props) {
       canvas: canvasRef.current,
       Character: EditorCharacter,
       characterOptions: { imgRef },
+      worldObjects: standard,
     });
   }, []);
 

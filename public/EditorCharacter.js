@@ -1,5 +1,6 @@
 import { last } from "underscore";
 import InputHandler from "./InputHandler";
+import variables from "./variables";
 import WorldObject from "./WorldObject";
 
 export default class EditorCharacter {
@@ -7,17 +8,12 @@ export default class EditorCharacter {
     Object.assign(this, options);
     const { tick } = options;
     this.inputHandler = new InputHandler();
-    this.world.objects.push(
-      new WorldObject({
-        position: [0, 0],
-        size: [100, 100],
-      })
-    );
     tick(this.doDraw);
   }
 
   startPos = [0, 0];
   objects = [];
+  deathTrigger = false;
 
   doDraw = () => {
     this.keyboardInputs();
@@ -43,6 +39,10 @@ export default class EditorCharacter {
       const obj = this.objects.pop();
       this.world.remove(obj?.id);
     }
+    if (inputs.swap) {
+      this.inputHandler.consumeInput("swap");
+      this.deathTrigger = !this.deathTrigger;
+    }
     if (inputs.attack) {
       this.inputHandler.consumeInput("attack");
       this.world.print();
@@ -60,6 +60,9 @@ export default class EditorCharacter {
       this.mouseDown = false;
       const obj = new WorldObject({
         textureName: this.imgRef?.current,
+        trigger: this.deathTrigger
+          ? variables.TRIGGER_TYPES.DEATH_TRIGGER
+          : undefined,
         position: [this.startPos[0] - x, this.startPos[1] - y],
         size: [
           inputs.mouse[0] - this.startPos[0],
@@ -78,7 +81,12 @@ export default class EditorCharacter {
     const { inputs } = this.inputHandler;
 
     ctx.beginPath();
-    ctx.strokeStyle = "red";
+    if (this.deathTrigger) {
+      ctx.strokeStyle = "red";
+    } else {
+      ctx.strokeStyle = "green";
+    }
+
     ctx.rect(
       this.startPos[0],
       this.startPos[1],

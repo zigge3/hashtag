@@ -105,6 +105,12 @@ const wrld = [
     size: [87, 118],
     textureName: "timmy.png",
   },
+  {
+    position: [-171, 48.5],
+    size: [76, 249],
+    textureName: "",
+    trigger: "dth",
+  },
 ];
 export default wrld.map(
   (obj) =>

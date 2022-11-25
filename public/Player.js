@@ -30,12 +30,13 @@ export default class Player {
   velocity = [0, 0];
   hitArea = [0, 50];
   stagger = 1;
-  attackCost = 15;
+  attackCost = 25;
   jumpCost = 4;
-  baseHit = [6, 4];
+  baseHit = [3, 3];
   energyRate = 100;
   energy = 100;
   maxEnergy = 100;
+  triggedTriggers = [];
   ui = [new Energy(this)];
   isGrounded = false;
   isPlayer = true;
@@ -61,20 +62,18 @@ export default class Player {
       posX + velX * (delta / targetUpdate),
       posY + velY * (delta / targetUpdate),
     ];
-    const collisionFound = [...objects, ...world.objects]
-      .filter((a) => a.layer === this.layer)
-      .reduce((acc, obj) => {
-        if (
-          this.checkCollision(
-            [...newPos, ...this.size],
-            [...obj.position, ...obj.size]
-          )
-        ) {
-          acc.push(obj);
-        }
+    this.doCollision({ objects, newPos });
+    this.doTriggers({ objects });
+  };
 
-        return acc;
-      }, []);
+  doCollision = ({ objects, newPos }) => {
+    const objs = [...objects]
+      .filter((a) => a.layer === this.layer)
+      .filter((a) => !a.trigger);
+    const collisionFound = this.intersectedObjects({
+      objects: objs,
+      position: newPos,
+    });
 
     if (!collisionFound.length) {
       this.position = newPos;
@@ -96,10 +95,10 @@ export default class Player {
       if (this.horizontalCollision(collisionFound[0])) {
         if (this.velocity[0] > 0) {
           this.setXPosition(
-            this.position[0] - distance.x - collisionFound[0].size[0]
+            this.position[0] - distance.x - collisionFound[0].size[0] - 1
           );
         } else if (this.velocity[0] < 0) {
-          this.setXPosition(this.position[0] - distance.x + this.size[0]);
+          this.setXPosition(this.position[0] - distance.x + this.size[0] + 1);
         }
 
         this.setXVelocity(0);
@@ -108,6 +107,44 @@ export default class Player {
       }
     }
   };
+
+  doTriggers = ({ objects }) => {
+    const objs = objects.filter((obj) => obj.trigger);
+    const { DEATH_TRIGGER } = variables.TRIGGER_TYPES;
+    const triggers = this.intersectedObjects({
+      objects: objs,
+      position: this.position,
+    });
+    this.triggedTriggers = this.triggedTriggers.filter((obj) =>
+      triggers.find((trObj) => trObj.id === obj.id)
+    );
+
+    triggers.forEach((obj) => {
+      if (this.triggedTriggers.find((trObj) => trObj.id === obj.id)) return;
+      switch (obj.trigger) {
+        case DEATH_TRIGGER:
+          this.die();
+          break;
+      }
+      this.triggedTriggers.push(obj);
+    });
+  };
+
+  intersectedObjects = ({ objects, position }) => {
+    return objects.reduce((acc, obj) => {
+      if (
+        this.checkCollision(
+          [...position, ...this.size],
+          [...obj.position, ...obj.size]
+        )
+      ) {
+        acc.push(obj);
+      }
+
+      return acc;
+    }, []);
+  };
+
   verticalCollision = (obj) => {
     const [velX, velY] = this.velocity;
     const { delta } = this;
@@ -216,9 +253,9 @@ export default class Player {
       this.setXVelocity(-this.baseHit[0] * this.stagger);
     }
     this.setYVelocity(-this.baseHit[1] * this.stagger);
-
-    this.velocity;
   };
+
+  die = () => {};
 
   checkCollision = (posA, posB) => {
     const [r1X, r1Y, r1W, r1H] = posA;

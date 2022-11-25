@@ -29,6 +29,7 @@ export default class WorldObject {
   zIndex = 0;
   layer = 0;
   isStatic = false;
+  trigger = null;
   sync = (player) => {
     if (player.textureName !== this.textureName) {
       this.texture = new Texture(player.textureName);

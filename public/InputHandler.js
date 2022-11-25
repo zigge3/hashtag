@@ -14,7 +14,6 @@ export default class InputHandler {
     document.addEventListener("keydown", (e) => {
       const { key } = e;
       e.preventDefault();
-      console.log(key);
       Object.keys(KEYS).forEach((input) => {
         if (KEYS[input] === key) {
           this.inputs[input] = true;

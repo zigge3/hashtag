@@ -2,11 +2,14 @@ import _ from "underscore";
 import Texture from "./Texture";
 import WorldObject from "./WorldObject";
 export default class World {
-  constructor({ tick }) {
+  constructor({ tick, worldObjects }) {
     tick((options) => {
       this.objects.forEach((obj) => obj.update && obj.update(options));
       this.players.forEach((obj) => obj.update && obj.update(options));
     });
+    if (worldObjects) {
+      this.objects = [...this.objects, ...worldObjects];
+    }
   }
   add = (obj) => {
     this.objects.push(obj);
@@ -20,8 +23,8 @@ export default class World {
   print = () => {
     console.log(
       this.objects.map((obj) => {
-        const { position, size, textureName } = obj;
-        return { position, size, textureName };
+        const { position, size, textureName, trigger } = obj;
+        return { position, size, textureName, trigger };
       })
     );
   };
