@@ -33,9 +33,10 @@ export default class World {
   size = [1500, 1000];
   players = [];
   startingPos = [
-    [377, 159.5],
-    [-129, -164.5],
-    [994, -53.5],
+    [424, 296.5],
+    [-428, -121.5],
+    [-861, 32.5],
+    [995, 76.5],
   ];
   objects = [
     new WorldObject({

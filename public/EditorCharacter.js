@@ -22,8 +22,8 @@ export default class EditorCharacter {
 
   keyboardInputs = () => {
     const { inputs } = this.inputHandler;
-    const x = inputs.mouse[0] - window.innerWidth / 2 - this.position[0];
-    const y = inputs.mouse[1] - window.innerHeight / 2 - this.position[1];
+    const x = window.innerWidth / 2 - this.position[0];
+    const y = window.innerHeight / 2 - this.position[1];
 
     if (inputs.right) {
       this.position = [this.position[0] + 3, this.position[1]];
@@ -52,7 +52,7 @@ export default class EditorCharacter {
     }
 
     if (inputs.scan) {
-      console.log([x, y]);
+      console.log([inputs.mouse[0] - x, inputs.mouse[1] - y]);
     }
   };
 

@@ -260,13 +260,17 @@ export default class Player {
   };
 
   die = () => {
+    this.velocity = [0, 0];
+    this.stagger = 1;
     this.respawn();
   };
   respawn = () => {
-    this.position =
+    const pos =
       this.world.startingPos[
         Math.floor(Math.random() * this.world.startingPos.length)
       ];
+
+    this.position = [pos[0], pos[1] - this.size[1] - 50];
   };
 
   checkCollision = (posA, posB) => {
