@@ -11,10 +11,10 @@ const KEYS = {
 };
 
 export default class InputHandler {
-  constructor() {
+  constructor(element = document) {
+    console.log("asds");
     document.addEventListener("keydown", (e) => {
       const { key } = e;
-      e.preventDefault();
       Object.keys(KEYS).forEach((input) => {
         if (KEYS[input] === key) {
           this.inputs[input] = true;
@@ -31,14 +31,18 @@ export default class InputHandler {
       });
     });
 
-    document.addEventListener("mousedown", (e) => {
+    element.addEventListener("mousedown", (e) => {
       this.inputs.mouseDown = true;
+      this.time = performance.now();
     });
-    document.addEventListener("mousemove", (e) => {
+    element.addEventListener("mousemove", (e) => {
       this.inputs.mouse = [e.offsetX, e.offsetY];
     });
-    document.addEventListener("mouseup", (e) => {
+    element.addEventListener("mouseup", (e) => {
       this.inputs.mouseDown = false;
+      if (performance.now() - this.time < 250) {
+        this.inputs.clicked = true;
+      }
     });
   }
 
@@ -58,5 +62,6 @@ export default class InputHandler {
     mouseDown: false,
     mouse: [0, 0],
     scan: false,
+    clicked: false,
   };
 }

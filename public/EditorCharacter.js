@@ -7,10 +7,10 @@ export default class EditorCharacter {
   constructor(options) {
     Object.assign(this, options);
     const { tick } = options;
-    this.inputHandler = new InputHandler();
+    this.inputHandler = new InputHandler(this.canvasRef.current);
     tick(this.doDraw);
   }
-
+  setActiveObject = null;
   startPos = [0, 0];
   objects = [];
   deathTrigger = false;
@@ -22,6 +22,9 @@ export default class EditorCharacter {
 
   keyboardInputs = () => {
     const { inputs } = this.inputHandler;
+    const x = inputs.mouse[0] - window.innerWidth / 2 - this.position[0];
+    const y = inputs.mouse[1] - window.innerHeight / 2 - this.position[1];
+
     if (inputs.right) {
       this.position = [this.position[0] + 3, this.position[1]];
     }
@@ -49,20 +52,28 @@ export default class EditorCharacter {
     }
 
     if (inputs.scan) {
-      const x = window.innerWidth / 2 - this.position[0];
-      const y = window.innerHeight / 2 - this.position[1];
-      console.log([inputs.mouse[0] - x, inputs.mouse[1] - y]);
+      console.log([x, y]);
     }
   };
 
   mouseInputs = () => {
     const { inputs } = this.inputHandler;
+    const x = window.innerWidth / 2 - this.position[0];
+    const y = window.innerHeight / 2 - this.position[1];
+
+    if (inputs.clicked) {
+      this.mouseDown = false;
+      this.inputHandler.consumeInput("clicked");
+      const clicked = this.intersectedObjects({
+        objects: this.world.objects.filter((obj) => !obj.isBackground),
+        position: [inputs.mouse[0] - x, inputs.mouse[1] - y],
+      });
+      this.setObject(clicked);
+    }
     if (inputs.mouseDown && !this.mouseDown) {
       this.mouseDown = true;
       this.startPos = inputs.mouse;
     } else if (!inputs.mouseDown && this.mouseDown) {
-      const x = window.innerWidth / 2 - this.position[0];
-      const y = window.innerHeight / 2 - this.position[1];
       this.mouseDown = false;
       const obj = new WorldObject({
         textureName: this.imgRef?.current,
@@ -100,6 +111,21 @@ export default class EditorCharacter {
       inputs.mouse[1] - this.startPos[1]
     );
     ctx.stroke();
+  };
+
+  checkCollision = (posA, posB) => {
+    const [r1X, r1Y, r1W, r1H] = posA;
+    const [r2X, r2Y, r2W, r2H] = posB;
+    const col =
+      r1X < r2X + r2W && r1X + r1W > r2X && r1Y < r2Y + r2H && r1Y + r1H > r2Y;
+    return col;
+  };
+
+  intersectedObjects = ({ objects, position }) => {
+    console.log(position);
+    return objects.find((obj) =>
+      this.checkCollision([...position, 1, 1], [...obj.position, ...obj.size])
+    );
   };
 
   position = [0, 0];

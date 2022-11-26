@@ -138,24 +138,14 @@ const wrld = [
     textureName: "",
     trigger: "dth",
   },
-  {
-    position: [1302, 373.5],
-    size: [80, -854],
-    textureName: "",
-    trigger: "dth",
-  },
+
   {
     position: [686, -652.5],
     size: [697, 77],
     textureName: "",
     trigger: "dth",
   },
-  {
-    position: [1307, -481.5],
-    size: [78, -120],
-    textureName: "",
-    trigger: "dth",
-  },
+
   {
     position: [-1271, 485.5],
     size: [1951, 70],
@@ -171,6 +161,12 @@ const wrld = [
   {
     position: [681, 483.5],
     size: [697, 78],
+    textureName: "",
+    trigger: "dth",
+  },
+  {
+    position: [1284, -654.5],
+    size: [94, 1030],
     textureName: "",
     trigger: "dth",
   },

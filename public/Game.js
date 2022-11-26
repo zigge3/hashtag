@@ -1,5 +1,4 @@
 import Camera from "./Camera";
-import InputHandler from "./InputHandler";
 import Player from "./Player";
 
 import World from "./World";
@@ -17,7 +16,6 @@ export default class Game {
       characterOptions,
       worldObjects,
     } = props;
-    this.inputHandler = new InputHandler();
     addEventListener("focus", (event) => {
       this.last = performance.now();
     });
