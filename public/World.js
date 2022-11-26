@@ -28,7 +28,10 @@ export default class World {
       })
     );
   };
-
+  background = new Texture("rocky-bg.jpg", {
+    size: [window.innerWidth, window.innerHeight],
+    aspectRatio: 1.777,
+  });
   gravity = [0, 10];
   size = [1500, 1000];
   players = [];
@@ -38,18 +41,5 @@ export default class World {
     [-861, 32.5],
     [995, 76.5],
   ];
-  objects = [
-    new WorldObject({
-      id: Math.random() * 100,
-      position: [0, 0],
-      size: [window.innerWidth, window.innerHeight],
-      isBackground: true,
-      isStatic: true,
-      size: [window.innerWidth, window.innerHeight],
-      texture: new Texture("rocky-bg.jpg", {
-        size: [window.innerWidth, window.innerHeight],
-        aspectRatio: 1.777,
-      }),
-    }),
-  ];
+  objects = [];
 }

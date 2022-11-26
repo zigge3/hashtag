@@ -19,14 +19,13 @@ export default class Camera {
   };
 
   render = ({ world, player }) => {
+    this.drawBackground({ texture: world.background, world });
+
     const { objects, players } = world;
     [...objects, ...players]
       .sort((a, b) => a.layer < b.layer)
       .forEach((obj) => {
         switch (obj.drawType) {
-          case variables.DRAW_TYPES.BACKGROUND:
-            this.drawBackground({ obj });
-            break;
           case variables.DRAW_TYPES.TEXTURE:
             this.drawTexture({ obj });
             break;
@@ -52,19 +51,23 @@ export default class Camera {
     ctx.stroke();
   };
 
-  drawBackground = ({ obj }) => {
+  drawBackground = ({ world }) => {
     const { ctx, cameraScale } = this;
-    const { texture } = obj;
+    const texture = world.background;
+    if (!world.objects.length) return;
+    const sizeSorted = world.objects.sort(
+      (a, b) => a.position[0] - b.position[0]
+    );
+    const offsetMulti = 1.2;
+    const size =
+      sizeSorted[sizeSorted.length - 1].position[0] - sizeSorted[0].position[0];
+    const offset =
+      Math.abs(sizeSorted[0].position[0] - this.position[0]) / size;
     if (texture.ready) {
-      let x, y;
-      if (window.innerHeight * texture.aspectRatio < window.innerWidth) {
-        x = window.innerWidth / cameraScale;
-        y = window.innerWidth / cameraScale / texture.aspectRatio;
-      } else {
-        x = (window.innerHeight / cameraScale) * texture.aspectRatio;
-        y = window.innerHeight / cameraScale;
-      }
-      ctx.drawImage(texture.texture, 0, 0, x, y);
+      const x = window.innerWidth * offsetMulti;
+      const y = x / texture.aspectRatio;
+      const origin = sizeSorted[0].position[0];
+      ctx.drawImage(texture.texture, origin * offset, 0, x * 1.5, y * 1.5);
     }
   };
 
